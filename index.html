@@ -425,19 +425,16 @@ body::-webkit-scrollbar-thumb {
 body:hover::-webkit-scrollbar-thumb {
   opacity: 1;
 }
-.sidebar::-webkit-scrollbar {
-  width: 5px;
+/* Hide scrollbar initially */
+body::-webkit-scrollbar-thumb {
+  opacity: 0;
 }
 
-.sidebar::-webkit-scrollbar-thumb {
-  background: rgba(0, 212, 255, 0.5);
-  border-radius: 10px;
+/* Show when hovering page */
+body:hover::-webkit-scrollbar-thumb {
+  opacity: 1;
 }
-
-.sidebar::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 212, 255, 0.9);
-}
-/* for firefox */
+/* Firefox */
 * {
   scrollbar-width: thin;
   scrollbar-color: #00d4ff transparent;
@@ -1018,6 +1015,8 @@ body:hover::-webkit-scrollbar-thumb {
   <div class="help-tooltip" id="help-tooltip">
     <div class="help-tooltip-title">📖 Quick Help</div>
     <a onclick="goto('manual');toggleHelp()">📖 User Manual</a>
+    <a onclick="goto('dashboard');toggleHelp()">🏠 Dashboard</a>
+    <a onclick="goto('ai');toggleHelp()">🤖 Ask AI Planner</a>
     <a onclick="goto('profile');toggleHelp()">👤 My Profile</a>
     <a onclick="confirmReset();toggleHelp()">🔄 Reset Data</a>
     <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);">Data saved locally in your browser</div>
@@ -1137,7 +1136,7 @@ const DAYS7=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const TIMES=['6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00'];
 
 // ══════ STATE ══════
-function freshState(){return{user:null,tasks:[],exams:[],habits:[],notes:[],resources:[],schedule:[],groups:[],streak:0,lastStudyDate:null,xp:0,totalStudyMins:0,weekMins:[0,0,0,0,0,0,0],pomSessions:[],pomTodayMins:0,pomSession:1,aiMsgs:[],nid:1,leaderboard:[]};}
+function freshState(){return{user:null,tasks:[],exams:[],habits:[],notes:[],resources:[],schedule:[],groups:[],streak:0,lastStudyDate:null,lastTaskResetDate:null,xp:0,totalStudyMins:0,weekMins:[0,0,0,0,0,0,0],pomSessions:[],pomTodayMins:0,pomSession:1,aiMsgs:[],nid:1,leaderboard:[]};}
 let S=freshState();
 
 // ══════ LOCALSTORAGE ══════
@@ -1246,10 +1245,27 @@ function setupSelects(){
 function goto(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.nav').forEach(n=>n.classList.remove('on'));
-  document.getElementById('pg-'+id).classList.add('on');
+  const pg=document.getElementById('pg-'+id);if(pg)pg.classList.add('on');
   document.querySelectorAll('.nav').forEach(n=>{if(n.textContent.trim().toLowerCase().startsWith(id.substring(0,4)))n.classList.add('on');});
+  // Sync bottom nav
+  const bnMap={dashboard:'bn-dashboard',tasks:'bn-tasks',pomodoro:'bn-pomodoro',ai:'bn-ai',exams:'bn-exams'};
+  document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('on'));
+  if(bnMap[id]){const el=document.getElementById(bnMap[id]);if(el)el.classList.add('on');}
+  // Scroll main area to top on page change
+  const ma=document.querySelector('.main-area');if(ma)ma.scrollTop=0;
   const fn={tasks:renderTasks,exams:renderExamsPage,goals:renderGoals,notes:renderNotes,insights:renderInsights,leaderboard:renderLB,groups:renderGroups,schedule:renderSched,pomodoro:refreshPomoTasks,ai:initAI,profile:initProfile};
   if(fn[id])fn[id]();
+}
+// ══════ MOBILE SIDEBAR ══════
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar'),ov=document.getElementById('sb-overlay');
+  const isOpen=sb.classList.toggle('open');
+  if(ov)ov.classList.toggle('open',isOpen);
+}
+function closeSidebar(){
+  const sb=document.getElementById('sidebar'),ov=document.getElementById('sb-overlay');
+  if(sb)sb.classList.remove('open');
+  if(ov)ov.classList.remove('open');
 }
 
 // ══════ DASHBOARD ══════
