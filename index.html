@@ -82,13 +82,23 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
 .btn-danger:hover{background:rgba(240,92,92,.22);}
 
 /* ══════ APP ══════ */
-#app{display:flex;flex-direction:column;min-height:100vh;overflow:hidden;}
+#app{display:flex;flex-direction:column;height:100vh;overflow:hidden;}
 .shell{display:flex;flex:1;overflow:hidden;min-height:0;}
 
+/* ══════ TOP BAR (mobile + sticky logo) ══════ */
+.top-bar{display:none;align-items:center;justify-content:space-between;padding:0 16px;height:54px;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0;position:sticky;top:0;z-index:200;}
+.top-bar-logo{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;background:linear-gradient(135deg,#4f8ef7,#7b5cf5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hamburger{width:36px;height:36px;background:var(--card);border:1px solid var(--border2);border-radius:var(--rs);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;}
+.hamburger span{width:18px;height:2px;background:var(--text2);border-radius:1px;transition:all .3s;}
+
+/* ══════ SIDEBAR OVERLAY (mobile) ══════ */
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:299;}
+.sb-overlay.open{display:block;}
+
 /* ══════ SIDEBAR ══════ */
-.sidebar{width:222px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;height:100%;position:sticky;top:0;}
-/* Sticky logo — never scrolls away */
-.sb-logo{display:flex;align-items:center;gap:10px;cursor:pointer;padding:16px 12px;border-bottom:1px solid var(--border);transition:background .2s;flex-shrink:0;position:sticky;top:0;z-index:10;background:var(--bg2);}
+.sidebar{width:240px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;height:100%;transition:transform .3s;z-index:300;}
+/* Sticky logo inside sidebar */
+.sb-logo{display:flex;align-items:center;gap:10px;cursor:pointer;padding:16px 14px;border-bottom:1px solid var(--border);transition:background .2s;flex-shrink:0;background:var(--bg2);}
 .sb-logo:hover{background:rgba(255,255,255,0.04);}
 .sb-logo i{font-size:22px;color:#4f8ef7;}
 .sb-logo-text{display:flex;flex-direction:column;}
@@ -121,7 +131,8 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
 .reset-btn:hover{background:rgba(240,92,92,.2);}
 
 /* ══════ MAIN AREA ══════ */
-.main-area{flex:1;overflow-y:auto;background:var(--bg);}
+.main-area{flex:1;overflow-y:auto;background:var(--bg);display:flex;flex-direction:column;}
+.pages-wrap{flex:1;}
 .page{display:none;padding:28px 32px;animation:fadeUp .3s ease;}
 .page.on{display:block;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:translateY(0);}}
@@ -130,12 +141,52 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
 .ph-left p{font-size:13px;color:var(--text3);margin-top:3px;}
 .ph-right{display:flex;gap:9px;align-items:center;flex-wrap:wrap;}
 
+/* ══════ BOTTOM NAV (mobile) ══════ */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:200;padding:6px 0 env(safe-area-inset-bottom,6px);}
+.bottom-nav-inner{display:flex;justify-content:space-around;align-items:center;}
+.bnav-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 10px;cursor:pointer;border-radius:var(--rs);transition:all .2s;min-width:52px;}
+.bnav-item .bni{font-size:20px;line-height:1;}
+.bnav-item .bnl{font-size:9px;color:var(--text3);font-weight:600;}
+.bnav-item.on .bnl{color:var(--accent);}
+.bnav-item.on .bni{filter:drop-shadow(0 0 4px rgba(79,142,247,.6));}
+
+/* ══════ MOBILE RESPONSIVE ══════ */
+@media(max-width:768px){
+  .top-bar{display:flex;}
+  .sidebar{position:fixed;left:0;top:0;bottom:0;transform:translateX(-100%);height:100vh;}
+  .sidebar.open{transform:translateX(0);}
+  .bottom-nav{display:block;}
+  .shell{padding-bottom:60px;}
+  .page{padding:16px 14px 20px;}
+  .g4{grid-template-columns:1fr 1fr!important;}
+  .g3{grid-template-columns:1fr 1fr!important;}
+  .g2{grid-template-columns:1fr!important;}
+  .g21{grid-template-columns:1fr!important;}
+  .float-help{bottom:72px;right:14px;}
+  .toast{bottom:72px;right:14px;max-width:calc(100vw - 28px);}
+  .footer{padding:24px 14px 16px;}
+  .footer-inner{padding:12px 16px;}
+  .ph-left h1{font-size:20px;}
+  .ob-left{display:none;}
+  .ob-right{width:100%;}
+  .ob-form-wrap{padding:20px 16px;}
+  .sched-grid{min-width:600px;}
+  .music-player{margin:6px;}
+}
+@media(max-width:480px){
+  .g4{grid-template-columns:1fr 1fr!important;}
+  .row2{grid-template-columns:1fr!important;}
+  .ph{flex-direction:column;}
+  .ph-right{width:100%;}
+  .sc-val{font-size:22px;}
+}
 
 /* ══════ FOOTER ══════ */
 .footer{background:#050810;color:#fff;padding:32px 24px 20px;font-family:'Nunito',sans-serif;text-align:center;border-top:1px solid rgba(79,142,247,.15);}
 .footer-container{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;}
 .footer-brand h2{margin:0;font-size:22px;font-weight:700;color:#4f8ef7;display:flex;align-items:center;gap:8px;justify-content:center;}
 .footer-brand p{margin-top:5px;color:#8d94c0;font-size:13px;}
+
 /* ══════ FOOTER BOX — ANIMATED GRADIENT BORDER ══════ */
 .footer-box{position:relative;border-radius:20px;display:inline-block;background:transparent;padding:2px;}
 .footer-box::before{content:'';position:absolute;inset:0;border-radius:20px;background:linear-gradient(135deg,var(--accent),var(--accent2),var(--teal),var(--pink),var(--accent));background-size:400% 400%;animation:borderSpin 4s ease infinite;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.8;pointer-events:none;}
@@ -341,7 +392,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
 .empty-state{text-align:center;padding:48px 20px;color:var(--text3);}
 .empty-state .ei{font-size:36px;margin-bottom:12px;}
 .empty-state p{font-size:14px;}
-@media(max-width:750px){.ob-left{display:none;}.ob-right{width:100%;}.page{padding:20px 16px;}.float-help{bottom:16px;right:16px;}}
+/* mobile handled above */
 /* Chrome, Edge, Safari */
 ::-webkit-scrollbar {
   width: 6px;
@@ -385,6 +436,11 @@ body:hover::-webkit-scrollbar-thumb {
 
 .sidebar::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 212, 255, 0.9);
+}
+/* for firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #00d4ff transparent;
 }
 </style>
 </head>
@@ -504,9 +560,17 @@ body:hover::-webkit-scrollbar-thumb {
 
 <!-- ══════════════ APP ══════════════ -->
 <div id="app" style="display:none;">
+  <!-- MOBILE TOP BAR -->
+  <div class="top-bar">
+    <button class="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+    <div class="top-bar-logo">StudyFlow</div>
+    <div style="width:36px;"></div>
+  </div>
+  <!-- SIDEBAR OVERLAY -->
+  <div class="sb-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
   <div class="shell">
-    <nav class="sidebar">
-      <div class="sb-logo" onclick="goto('dashboard')">
+    <nav class="sidebar" id="sidebar">
+      <div class="sb-logo" onclick="goto('dashboard');closeSidebar()">
         <i class="fa-solid fa-graduation-cap"></i>
         <div class="sb-logo-text">
           <div class="logo-title">StudyFlow</div>
@@ -514,24 +578,24 @@ body:hover::-webkit-scrollbar-thumb {
         </div>
       </div>
       <div class="sb-scroll">
-        <div class="sb-user" onclick="goto('profile')">
+        <div class="sb-user" onclick="goto('profile');closeSidebar()">
           <div class="sb-av" id="sb-av">A</div>
           <div><div class="sb-uname" id="sb-name">Student</div><div class="sb-uclass" id="sb-class">Class 10</div></div>
         </div>
         <div class="sb-section">Main</div>
-        <div class="nav on" onclick="goto('dashboard')"><span class="ni">🏠</span>Dashboard</div>
-        <div class="nav" onclick="goto('schedule')"><span class="ni">📅</span>Schedule</div>
-        <div class="nav" onclick="goto('tasks')"><span class="ni">✅</span>Tasks<span class="nbadge" id="nb-overdue" style="display:none;">0</span></div>
-        <div class="nav" onclick="goto('pomodoro')"><span class="ni">⏱</span>Study Timer</div>
-        <div class="nav" onclick="goto('exams')"><span class="ni">📝</span>Exams</div>
+        <div class="nav on" onclick="goto('dashboard');closeSidebar()"><span class="ni">🏠</span>Dashboard</div>
+        <div class="nav" onclick="goto('schedule');closeSidebar()"><span class="ni">📅</span>Schedule</div>
+        <div class="nav" onclick="goto('tasks');closeSidebar()"><span class="ni">✅</span>Tasks<span class="nbadge" id="nb-overdue" style="display:none;">0</span></div>
+        <div class="nav" onclick="goto('pomodoro');closeSidebar()"><span class="ni">⏱</span>Study Timer</div>
+        <div class="nav" onclick="goto('exams');closeSidebar()"><span class="ni">📝</span>Exams</div>
         <div class="sb-section">Growth</div>
-        <div class="nav" onclick="goto('goals')"><span class="ni">🎯</span>Goals &amp; Habits</div>
-        <div class="nav" onclick="goto('insights')"><span class="ni">📊</span>Insights</div>
-        <div class="nav" onclick="goto('notes')"><span class="ni">📓</span>Notes</div>
+        <div class="nav" onclick="goto('goals');closeSidebar()"><span class="ni">🎯</span>Goals &amp; Habits</div>
+        <div class="nav" onclick="goto('insights');closeSidebar()"><span class="ni">📊</span>Insights</div>
+        <div class="nav" onclick="goto('notes');closeSidebar()"><span class="ni">📓</span>Notes</div>
         <div class="sb-section">AI &amp; Social</div>
-        <div class="nav" onclick="goto('ai')"><span class="ni">🤖</span>AI Planner</div>
-        <div class="nav" onclick="goto('groups')"><span class="ni">👥</span>Study Groups</div>
-        <div class="nav" onclick="goto('leaderboard')"><span class="ni">🏆</span>Leaderboard</div>
+        <div class="nav" onclick="goto('ai');closeSidebar()"><span class="ni">🤖</span>AI Planner</div>
+        <div class="nav" onclick="goto('groups');closeSidebar()"><span class="ni">👥</span>Study Groups</div>
+        <div class="nav" onclick="goto('leaderboard');closeSidebar()"><span class="ni">🏆</span>Leaderboard</div>
 
         <!-- ══ MUSIC PLAYER ══ -->
         <div class="music-player">
@@ -568,6 +632,7 @@ body:hover::-webkit-scrollbar-thumb {
     </nav>
 
     <div class="main-area">
+      <div class="pages-wrap">
 
       <!-- DASHBOARD -->
       <div class="page on" id="pg-dashboard">
@@ -907,32 +972,45 @@ body:hover::-webkit-scrollbar-thumb {
         </div>
       </div>
 
+      </div><!-- /pages-wrap -->
+
+      <!-- FOOTER — inside scroll area, appears at bottom of all content -->
+      <footer class="footer">
+        <div class="footer-container">
+          <div class="footer-brand">
+            <h2><i class="fa-solid fa-graduation-cap"></i> StudyFlow</h2>
+            <p>Your personal academic planner.</p>
+            <p>Class 1–12, JEE &amp; NEET — all in one place.</p>
+          </div>
+          <div class="footer-box">
+            <div class="footer-inner">
+              <div style="font-size:20px;text-align:center;margin-bottom:10px;">🎓</div>
+              <div class="footer-right">
+                <span class="footer-link" onclick="event.stopPropagation();goto('manual')"><i class="fa-solid fa-book-open"></i> User Manual</span>
+                <span class="footer-link" onclick="event.stopPropagation();goto('profile')"><i class="fa-solid fa-user"></i> My Profile</span>
+                <span class="footer-link" onclick="event.stopPropagation();confirmReset()"><i class="fa-solid fa-rotate"></i> Reset Data</span>
+              </div>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <i class="fa-regular fa-copyright"></i> 2026 <strong>StudyFlow</strong>. All rights reserved. Made with ❤️ for students. Developed by Anmol Kumar &amp; <a href="https://devsupport.co.in" target="_blank">DevSupport</a>
+          </div>
+        </div>
+      </footer>
+
     </div><!-- /main-area -->
   </div><!-- /shell -->
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="footer-container">
-      <div class="footer-brand">
-        <h2><i class="fa-solid fa-graduation-cap"></i> StudyFlow App</h2>
-        <p>Your personal academic planner.</p>
-        <p>Class 1–12, JEE &amp; NEET — all in one place.</p>
-      </div>
-      <div class="footer-box">
-        <div class="footer-inner">
-          <div style="font-size:22px;text-align:center;margin-bottom:10px;">🎓</div>
-          <div class="footer-right">
-            <span class="footer-link" onclick="event.stopPropagation();goto('manual')"><i class="fa-solid fa-book-open"></i> User Manual</span>
-            <span class="footer-link" onclick="event.stopPropagation();goto('profile')"><i class="fa-solid fa-user"></i> My Profile</span>
-            <span class="footer-link" onclick="event.stopPropagation();confirmReset()"><i class="fa-solid fa-rotate"></i> Reset Data</span>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <i class="fa-regular fa-copyright"></i> 2026 <strong>StudyFlow</strong>. All rights reserved. Made with ❤️ for students. Developed and managed by Anmol Kumar &amp; Protech team
-      </div>
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <div class="bottom-nav-inner">
+      <div class="bnav-item on" id="bn-dashboard" onclick="goto('dashboard')"><span class="bni">🏠</span><span class="bnl">Home</span></div>
+      <div class="bnav-item" id="bn-tasks" onclick="goto('tasks')"><span class="bni">✅</span><span class="bnl">Tasks</span></div>
+      <div class="bnav-item" id="bn-pomodoro" onclick="goto('pomodoro')"><span class="bni">⏱</span><span class="bnl">Timer</span></div>
+      <div class="bnav-item" id="bn-ai" onclick="goto('ai')"><span class="bni">🤖</span><span class="bnl">AI Plan</span></div>
+      <div class="bnav-item" id="bn-exams" onclick="goto('exams')"><span class="bni">📝</span><span class="bnl">Exams</span></div>
     </div>
-  </footer>
+  </nav>
 </div><!-- /app -->
 
 <!-- ══════ FLOATING HELP BUTTON ══════ -->
@@ -940,6 +1018,7 @@ body:hover::-webkit-scrollbar-thumb {
   <div class="help-tooltip" id="help-tooltip">
     <div class="help-tooltip-title">📖 Quick Help</div>
     <a onclick="goto('manual');toggleHelp()">📖 User Manual</a>
+    <a onclick="goto('profile');toggleHelp()">👤 My Profile</a>
     <a onclick="confirmReset();toggleHelp()">🔄 Reset Data</a>
     <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);">Data saved locally in your browser</div>
   </div>
@@ -1466,11 +1545,36 @@ function initProfile(){const u=S.user,xp=calcXP();document.getElementById('profi
 function saveProfile(){const name=document.getElementById('edit-name').value.trim()||S.user.name,mode=document.getElementById('edit-mode').value,goal=parseInt(document.getElementById('edit-goal').value)||S.user.goal,commute=parseInt(document.getElementById('edit-commute').value)||0,modeLabel=mode==='jee'?'JEE Aspirant':mode==='neet'?'NEET Aspirant':'Class '+mode.replace('class','');S.user={...S.user,name,mode,displayMode:modeLabel,goal,cm:Math.floor(commute/2),ce:Math.ceil(commute/2),hasTransport:commute>0,schoolStart:document.getElementById('edit-start').value,schoolEnd:document.getElementById('edit-end').value};saveLS();setupSidebar();setupSelects();initProfile();renderDashboard();renderGoals();toast('Profile saved! ✓');}
 function confirmReset(){if(!confirm('This will delete ALL your data (tasks, exams, sessions, streak). Are you sure?'))return;localStorage.removeItem(LS_KEY);location.reload();}
 
+// ══════ MOBILE SIDEBAR ══════
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar'),ov=document.getElementById('sb-overlay');
+  const open=sb.classList.toggle('open');
+  ov.classList.toggle('open',open);
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sb-overlay').classList.remove('open');
+}
+
 // ══════ BOOT ══════
 window.addEventListener('DOMContentLoaded',()=>{
   buildSubjCheck('class10');
-  if(loadLS()&&S.user){const td=today();if(S.lastStudyDate!==td){S.pomTodayMins=0;}launchApp();}
-  else{document.getElementById('onboard').style.display='flex';document.getElementById('app').style.display='none';document.getElementById('float-help').style.display='none';}
+  if(loadLS()&&S.user){
+    const td=today();
+    // Reset today pomodoro if new day
+    if(S.lastStudyDate!==td){S.pomTodayMins=0;}
+    // Daily task reset: mark done tasks as pending again on a new day
+    if(S.lastTaskResetDate!==td){
+      S.tasks=S.tasks.map(t=>t.done?{...t,done:false,completedOn:t.completedOn||t.due}:t);
+      S.lastTaskResetDate=td;
+      saveLS();
+    }
+    launchApp();
+  } else {
+    document.getElementById('onboard').style.display='flex';
+    document.getElementById('app').style.display='none';
+    document.getElementById('float-help').style.display='none';
+  }
 });
 </script>
 </body>
