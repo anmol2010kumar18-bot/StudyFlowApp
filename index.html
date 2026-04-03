@@ -4,9 +4,20 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>StudyFlow — Smart Student Planner</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎓</text></svg>">
+<!-- SVG favicon for modern browsers -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='80'%3E🎓%3C/text%3E%3C/svg%3E">
+
+<!-- Fallback PNG favicon for older browsers (32x32) -->
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGwSURBVFhH7ZbNSsNAFIUnCIIgCBbBhS+gGzdduBBBEARBEFy5Ed0JgiAIgiAIgiAIgiAIgiAIgiAIgiAIgiAIgiAIgiAIgiAIgiAIgiAIgiD4B/05XG5ukkknHwRuM/fMOT+ZJpP2hJDxM1jqDgAMAG8B6wFrAcMNMVXAFMBKQMiqjxo3Mh0wGxABL1n1VYODI4D5gA1AOWD/VqPCkQATgBWABHACuAIsbGpUOAKgFzAMGAKMAhYBg5salY4AOAV4BigBlgHHAWubGpWOACgDvAFy4A3gCbC9qVHpCIA3wF/AC2APMBSwr6lR6QiAD8B/wAvgGLAlYHdTo9IRAJ+AEDgDbAk4AjjY1Kh0BEAEXAAaAZcAhwCbmxqVjgC4BrwDPAJeAQ4Dljc1Kh0B8ADYBNgU0ADY1NSodATAM2APsC9gDmBrU6PSEQAFsA+wBLArYA5gaVOj0hEALwGOAI4FzAGcAdQ1NSodAfAWYAtgR8AUwPqmRqUjAHIAPoDrC5gAmAGobGpUOgLgE8A7gA1gBGC+SpsalY4A+ASwAPAU4BjA9BWgpalR6QjwC2AFYAtgK2BbU6PSEQA/AFaAaxMz4APA44CtTY1KRwD8BPC2AgYAJgC2Nn2o/lO/AdTppchAKdLjAAAAAElFTkSuQmCC">
+
+<!-- Apple Touch Icon (for iOS home screen) -->
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%234f8ef7'/%3E%3Ctext x='90' y='125' font-size='90' text-anchor='middle' fill='white'%3E🎓%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -27,7 +38,59 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
 @keyframes borderSpin{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
 @keyframes borderGlow{0%,100%{opacity:.7;}50%{opacity:1;}}
 
-/* ══════ ONBOARDING ══════ */
+/* ══════ AUTH SCREEN ══════ */
+#auth-screen{position:fixed;inset:0;z-index:10000;display:none;background:var(--bg);overflow-y:auto;}
+.auth-wrap{min-height:100vh;display:flex;}
+.auth-left{width:44%;background:linear-gradient(160deg,#0e1128 0%,#141830 40%,#0a0c18 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 40px;position:relative;overflow:hidden;flex-shrink:0;}
+.auth-left::before{content:'';position:absolute;top:-80px;left:-80px;width:320px;height:320px;background:radial-gradient(circle,rgba(79,142,247,.18) 0%,transparent 70%);pointer-events:none;}
+.auth-left::after{content:'';position:absolute;bottom:-60px;right:-60px;width:260px;height:260px;background:radial-gradient(circle,rgba(123,92,245,.15) 0%,transparent 70%);pointer-events:none;}
+.auth-logo-big{font-family:'Syne',sans-serif;font-size:42px;font-weight:800;background:linear-gradient(135deg,#4f8ef7,#7b5cf5,#e85ca0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;position:relative;z-index:1;}
+.auth-tagline{font-size:14px;color:var(--text3);text-align:center;line-height:1.7;margin-bottom:30px;position:relative;z-index:1;}
+.auth-feature{display:flex;align-items:center;gap:12px;margin-bottom:14px;position:relative;z-index:1;}
+.auth-fi{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.auth-fh{font-size:14px;font-weight:700;color:var(--text);margin-bottom:1px;}
+.auth-ft{font-size:12px;color:var(--text2);}
+.auth-stats{display:flex;gap:22px;margin-top:28px;position:relative;z-index:1;}
+.auth-sv{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;background:linear-gradient(135deg,#4f8ef7,#7b5cf5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.auth-sl{font-size:10px;color:var(--text3);margin-top:2px;text-align:center;}
+.auth-right{flex:1;background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 28px;min-height:100vh;}
+.auth-box{width:100%;max-width:420px;}
+.auth-tab-row{display:flex;background:var(--bg3);border-radius:var(--r);padding:4px;margin-bottom:22px;}
+.auth-tab{flex:1;padding:9px;text-align:center;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;color:var(--text3);transition:all .2s;border:none;background:transparent;font-family:'Nunito',sans-serif;}
+.auth-tab.on{background:var(--card);color:var(--text);}
+.auth-form{display:none;}.auth-form.on{display:block;}
+.auth-input-wrap{position:relative;margin-bottom:13px;}
+.auth-input-wrap input{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;padding:11px 14px 11px 40px;outline:none;transition:border-color .2s;}
+.auth-input-wrap input:focus{border-color:var(--accent);}
+.auth-input-wrap input::placeholder{color:var(--text3);}
+.auth-input-wrap i{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--text3);}
+.auth-or{text-align:center;font-size:12px;color:var(--text3);margin:14px 0;position:relative;}
+.auth-or::before,.auth-or::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border2);}
+.auth-or::before{left:0;}.auth-or::after{right:0;}
+.auth-google-btn{width:100%;padding:11px;background:var(--card);border:1px solid var(--border2);border-radius:var(--rs);color:var(--text);font-size:13px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;margin-bottom:10px;}
+.auth-google-btn:hover{background:var(--card2);border-color:var(--accent);}
+.auth-google-btn img{width:18px;height:18px;}
+.auth-err{background:rgba(240,92,92,.1);border:1px solid rgba(240,92,92,.25);border-radius:var(--rs);padding:9px 13px;font-size:13px;color:var(--red);margin-bottom:12px;display:none;}
+.auth-link{font-size:12px;color:var(--accent);cursor:pointer;text-align:center;margin-top:10px;}
+.auth-link:hover{color:var(--teal);}
+.auth-loading{display:none;text-align:center;padding:40px;color:var(--text3);}
+.auth-spinner{width:36px;height:36px;border:3px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+@media(max-width:768px){
+  .auth-left{display:none;}
+  .auth-right{min-height:100vh;padding:24px 16px;}
+  .auth-box{max-width:100%;}
+}
+
+/* ══════ DAILY HISTORY ══════ */
+.hist-day{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:12px 14px;margin-bottom:8px;}
+.hist-day-header{display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
+.hist-day-date{font-size:13px;font-weight:700;}
+.hist-day-stats{display:flex;gap:10px;font-size:12px;color:var(--text3);}
+.hist-day-body{margin-top:10px;display:none;}
+.hist-day-body.open{display:block;}
+.hist-task-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--text2);}
+.hist-task-row:last-child{border-bottom:none;}
 #onboard{position:fixed;inset:0;z-index:9999;display:flex;overflow:hidden;}
 .ob-left{width:42%;background:linear-gradient(160deg,#0e1128 0%,#141830 40%,#0a0c18 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 40px;position:relative;overflow:hidden;flex-shrink:0;}
 .ob-left::before{content:'';position:absolute;top:-80px;left:-80px;width:320px;height:320px;background:radial-gradient(circle,rgba(79,142,247,.18) 0%,transparent 70%);pointer-events:none;}
@@ -416,25 +479,42 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
   box-shadow: 0 0 10px rgba(0,212,255,0.7),
               0 0 20px rgba(123,92,245,0.6);
 }
-/* Hide scrollbar initially */
-body::-webkit-scrollbar-thumb {
-  opacity: 0;
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 6px;
 }
 
-/* Show when hovering page */
-body:hover::-webkit-scrollbar-thumb {
-  opacity: 1;
-}
-/* Hide scrollbar initially */
-body::-webkit-scrollbar-thumb {
-  opacity: 0;
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-/* Show when hovering page */
-body:hover::-webkit-scrollbar-thumb {
-  opacity: 1;
+/* Thumb (main bar) */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00d4ff, #7b5cf5);
+  border-radius: 20px;
+  transition: all 0.3s ease;
 }
-/* Firefox */
+
+/* Glow on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #00ffff, #9a7bff);
+  box-shadow: 0 0 10px rgba(0,212,255,0.7),
+              0 0 20px rgba(123,92,245,0.6);
+}
+.sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(0, 212, 255, 0.5);
+  border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 212, 255, 0.9);
+}
+/* For Firefox */
 * {
   scrollbar-width: thin;
   scrollbar-color: #00d4ff transparent;
@@ -442,6 +522,77 @@ body:hover::-webkit-scrollbar-thumb {
 </style>
 </head>
 <body>
+
+<!-- ══════════════ AUTH SCREEN ══════════════ -->
+<div id="auth-screen">
+  <div class="auth-wrap">
+    <!-- LEFT PANEL -->
+    <div class="auth-left">
+      <div class="auth-logo-big">StudyFlow</div>
+      <div class="auth-tagline">Your personal academic planner.<br/>Class 1–12, JEE &amp; NEET — all in one place.</div>
+      <div class="auth-feature"><div class="auth-fi" style="background:rgba(79,142,247,.2);">📅</div><div><div class="auth-fh">Smart Schedule Builder</div><div class="auth-ft">Auto-timetable based on your exams</div></div></div>
+      <div class="auth-feature"><div class="auth-fi" style="background:rgba(34,201,138,.2);">🤖</div><div><div class="auth-fh">AI Study Planner</div><div class="auth-ft">Personalised plans powered by AI</div></div></div>
+      <div class="auth-feature"><div class="auth-fi" style="background:rgba(240,160,48,.2);">⏱</div><div><div class="auth-fh">Pomodoro Timer</div><div class="auth-ft">Deep focus with session tracking</div></div></div>
+      <div class="auth-feature"><div class="auth-fi" style="background:rgba(232,92,160,.2);">📊</div><div><div class="auth-fh">Syllabus Completion</div><div class="auth-ft">Track progress per exam, per subject</div></div></div>
+      <div class="auth-feature"><div class="auth-fi" style="background:rgba(155,108,245,.2);">☁️</div><div><div class="auth-fh">Cloud Sync</div><div class="auth-ft">Data saved to your account, any device</div></div></div>
+      <div class="auth-stats">
+        <div><div class="auth-sv">12+</div><div class="auth-sl">Levels</div></div>
+        <div><div class="auth-sv">JEE</div><div class="auth-sl">Ready</div></div>
+        <div><div class="auth-sv">NEET</div><div class="auth-sl">Ready</div></div>
+        <div><div class="auth-sv">Cloud</div><div class="auth-sl">Sync</div></div>
+      </div>
+    </div>
+    <!-- RIGHT PANEL -->
+    <div class="auth-right">
+      <!-- Loading state — hidden until needed -->
+      <div class="auth-loading" id="auth-loading" style="display:none;">
+        <div class="auth-spinner"></div>
+        <div style="margin-top:8px;">Checking your account...</div>
+      </div>
+      <div class="auth-box" id="auth-box">
+        <div style="text-align:center;margin-bottom:22px;">
+          <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;background:linear-gradient(135deg,#4f8ef7,#7b5cf5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Welcome to StudyFlow</div>
+          <div style="font-size:13px;color:var(--text3);margin-top:4px;">Sign in to save your data across all devices</div>
+        </div>
+        <!-- TABS -->
+        <div class="auth-tab-row">
+          <button class="auth-tab on" id="tab-signin" onclick="switchAuthTab('signin')">Sign In</button>
+          <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">Sign Up</button>
+        </div>
+        <!-- ERROR -->
+        <div class="auth-err" id="auth-err"></div>
+        <!-- GOOGLE -->
+        <button class="auth-google-btn" onclick="signInGoogle()">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"/>
+          Continue with Google
+        </button>
+        <div class="auth-or">or use email</div>
+        <!-- SIGN IN FORM -->
+        <div class="auth-form on" id="form-signin">
+          <div class="auth-input-wrap"><i class="fa-solid fa-envelope"></i><input type="email" id="si-email" placeholder="Email address" autocomplete="email"/></div>
+          <div class="auth-input-wrap"><i class="fa-solid fa-lock"></i><input type="password" id="si-pass" placeholder="Password" autocomplete="current-password"/></div>
+          <button class="btn btn-primary btn-full" onclick="signInEmail()" style="margin-bottom:10px;">Sign In →</button>
+          <div class="auth-link" onclick="forgotPassword()">Forgot password?</div>
+        </div>
+        <!-- SIGN UP FORM -->
+        <div class="auth-form" id="form-signup">
+          <div class="auth-input-wrap"><i class="fa-solid fa-user"></i><input type="text" id="su-name" placeholder="Your full name"/></div>
+          <div class="auth-input-wrap"><i class="fa-solid fa-envelope"></i><input type="email" id="su-email" placeholder="Email address" autocomplete="email"/></div>
+          <div class="auth-input-wrap"><i class="fa-solid fa-lock"></i><input type="password" id="su-pass" placeholder="Create password (min 6 chars)" autocomplete="new-password"/></div>
+          <button class="btn btn-primary btn-full" onclick="signUpEmail()" style="margin-bottom:10px;">Create Account →</button>
+        </div>
+        <div class="demo-div" style="margin-top:14px;">or try without signing in</div>
+        <div class="demo-grid" style="margin-top:0;">
+          <button class="demo-btn" onclick="demoLogin('jee')"><span class="di">⚗️</span><div><div style="font-size:12px;color:var(--text);">JEE Demo</div></div></button>
+          <button class="demo-btn" onclick="demoLogin('neet')"><span class="di">🧬</span><div><div style="font-size:12px;color:var(--text);">NEET Demo</div></div></button>
+          <button class="demo-btn" onclick="demoLogin('class10')"><span class="di">📚</span><div><div style="font-size:12px;color:var(--text);">Class 10</div></div></button>
+          <button class="demo-btn" onclick="demoLogin('class5')"><span class="di">🎒</span><div><div style="font-size:12px;color:var(--text);">Class 5</div></div></button>
+        </div>
+        <div style="font-size:11px;color:var(--text3);text-align:center;margin-top:14px;">© 2026 StudyFlow · Al rights are reserved by Anmol kumar & <a href="https://devsupport.co.in" target="_blank" style="color:var(--accent);text-decoration:none;">DevSupport</a></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ══════════════ ONBOARDING ══════════════ -->
 <div id="onboard">
@@ -550,7 +701,7 @@ body:hover::-webkit-scrollbar-thumb {
       </div>
     </div>
     <div style="padding:14px 28px;border-top:1px solid var(--border);margin-top:auto;">
-      <div style="font-size:11px;color:var(--text3);text-align:center;">© 2026 StudyFlow. All rights reserved.</div>
+        <div style="font-size:11px;color:var(--text3);text-align:center;margin-top:14px;">© 2026 StudyFlow · Al rights are reserved by Anmol kumar & <a href="https://devsupport.co.in" target="_blank" style="color:var(--accent);text-decoration:none;">DevSupport</a></div>
     </div>
   </div>
 </div>
@@ -577,7 +728,11 @@ body:hover::-webkit-scrollbar-thumb {
       <div class="sb-scroll">
         <div class="sb-user" onclick="goto('profile');closeSidebar()">
           <div class="sb-av" id="sb-av">A</div>
-          <div><div class="sb-uname" id="sb-name">Student</div><div class="sb-uclass" id="sb-class">Class 10</div></div>
+          <div style="flex:1;min-width:0;">
+            <div class="sb-uname" id="sb-name">Student</div>
+            <div class="sb-uclass" id="sb-class">Class 10</div>
+          </div>
+          <div id="sb-sync-badge" style="font-size:10px;color:var(--green);flex-shrink:0;" title="Cloud sync active">☁️</div>
         </div>
         <div class="sb-section">Main</div>
         <div class="nav on" onclick="goto('dashboard');closeSidebar()"><span class="ni">🏠</span>Dashboard</div>
@@ -593,6 +748,7 @@ body:hover::-webkit-scrollbar-thumb {
         <div class="nav" onclick="goto('ai');closeSidebar()"><span class="ni">🤖</span>AI Planner</div>
         <div class="nav" onclick="goto('groups');closeSidebar()"><span class="ni">👥</span>Study Groups</div>
         <div class="nav" onclick="goto('leaderboard');closeSidebar()"><span class="ni">🏆</span>Leaderboard</div>
+        <div class="nav" onclick="goto('history');closeSidebar()"><span class="ni">📆</span>Daily History</div>
 
         <!-- ══ MUSIC PLAYER ══ -->
         <div class="music-player">
@@ -623,7 +779,8 @@ body:hover::-webkit-scrollbar-thumb {
         </div>
 
         <div class="sb-foot">
-          <button class="reset-btn" onclick="confirmReset()">⟵ Reset &amp; Start Over</button>
+          <button class="reset-btn" onclick="doSignOut()">⟵ Sign Out</button>
+          <button style="width:100%;margin-top:6px;padding:7px;background:rgba(240,92,92,.08);border:1px solid rgba(240,92,92,.15);border-radius:var(--rs);color:var(--red);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;" onclick="confirmReset()">🗑 Reset All Data</button>
         </div>
       </div><!-- /sb-scroll -->
     </nav>
@@ -641,6 +798,11 @@ body:hover::-webkit-scrollbar-thumb {
           </div>
         </div>
         <div id="dash-transport-bar" style="display:none;" class="transport-bar">🚌 <span id="dash-transport-msg"></span></div>
+        <!-- Guest mode banner -->
+        <div id="guest-banner" style="display:none;background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.2);border-radius:var(--rs);padding:10px 16px;margin-bottom:14px;display:none;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+          <span style="font-size:13px;color:var(--text2);">👤 <b>Guest mode</b> — your data is only saved on this device</span>
+          <button class="btn btn-primary btn-sm" onclick="doSignOut()">Sign In to Sync ☁️</button>
+        </div>
         <div class="streak-bar">
           <span style="font-size:32px;">🔥</span>
           <div><div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:700;" id="dash-streak-text">0 Day Streak</div><div style="font-size:12px;color:var(--text3);">Study daily to build your streak</div></div>
@@ -883,93 +1045,118 @@ body:hover::-webkit-scrollbar-thumb {
 
       <!-- USER MANUAL -->
       <div class="page" id="pg-manual">
-        <div class="ph"><div class="ph-left"><h1>Help &amp; User Manual</h1><p>Everything you need to know about StudyFlow</p></div></div>
-        <div class="g2">
-          <div>
-            <div class="card" style="margin-bottom:16px;">
-              <div class="manual-section">
-                <h3>🚀 Getting Started</h3>
-                <ul>
-                  <li>Fill your Personal Details once — saved in your browser forever.</li>
-                  <li>When you return, StudyFlow loads automatically — no login needed.</li>
-                  <li>Click <b>Reset &amp; Start Over</b> in the sidebar to clear all data.</li>
-                </ul>
-                <div class="manual-tip">💡 New users start with zero data — all stats, streaks, XP and hours are earned by you.</div>
-              </div>
-              <div class="divhr"></div>
-              <div class="manual-section">
-                <h3>✅ Tasks &amp; Syllabus</h3>
-                <ul>
-                  <li>Add tasks with a <b>Subject</b> tag — links them to your exams.</li>
-                  <li>When you add an Exam, enter its <b>Syllabus topics</b>.</li>
-                  <li>As you complete tasks for that subject, the <b>Syllabus %</b> rises automatically.</li>
-                </ul>
-                <div class="manual-tip">💡 More tasks completed per subject = higher syllabus completion.</div>
-              </div>
-              <div class="divhr"></div>
-              <div class="manual-section">
-                <h3>⏱ Study Timer</h3>
-                <ul>
-                  <li>Pomodoro Timer — 25 min focus, 5 min break.</li>
-                  <li>Every completed session adds to your <b>Total Study Hours</b>.</li>
-                  <li>Hours appear in Insights and Dashboard chart.</li>
-                </ul>
-              </div>
-              <div class="divhr"></div>
-              <div class="manual-section">
-                <h3>📅 Schedule Builder</h3>
-                <ul>
-                  <li>Click <b>Auto-Schedule</b> to generate a smart timetable.</li>
-                  <li>Click <b>✕</b> on any block to remove it.</li>
-                  <li>Transport users get bus blocks added automatically.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div class="card" style="margin-bottom:16px;">
-              <div class="manual-section">
-                <h3>📊 Insights (Live Data)</h3>
-                <ul>
-                  <li>All charts update as you complete tasks and Pomodoro sessions.</li>
-                  <li>Weekly chart = actual hours from your timer sessions.</li>
-                  <li>Weak spots = subjects with most pending tasks.</li>
-                </ul>
-              </div>
-              <div class="divhr"></div>
-              <div class="manual-section">
-                <h3>🤖 AI Study Planner</h3>
-                <ul>
-                  <li>Uses your live data: exams, tasks, hours, subjects, commute.</li>
-                  <li>Ask for a study plan, exam strategy, or daily schedule.</li>
-                  <li>Use Quick Prompts for common requests.</li>
-                </ul>
-              </div>
-              <div class="divhr"></div>
-              <div class="manual-section">
-                <h3>🏆 XP &amp; Leaderboard</h3>
-                <ul>
-                  <li>XP is calculated from real activity: tasks, sessions, streaks.</li>
-                  <li>Streak increases when you log at least 1 Pomodoro per day.</li>
-                  <li>Badges are earned automatically at milestones.</li>
-                </ul>
-              </div>
-              <div class="divhr"></div>
-              <div class="manual-section">
-                <h3>💾 Data &amp; Privacy</h3>
-                <ul>
-                  <li>All data stored in your browser's <b>localStorage</b>.</li>
-                  <li>Nothing is sent to any server — 100% private.</li>
-                  <li>Use <b>Reset &amp; Start Over</b> to clear all data intentionally.</li>
-                </ul>
-                <div class="manual-tip">💡 To transfer data, use Chrome Sync or Firefox Sync.</div>
-              </div>
-            </div>
-          </div>
+  <div class="ph">
+    <div class="ph-left"><h1>Help &amp; User Manual</h1><p>Everything you need to know about StudyFlow</p></div>
+  </div>
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="manual-section">
+          <h3>🚀 Getting Started</h3>
+          <ul>
+            <li><strong>Sign Up / Sign In</strong> – Use email/password or Google to create an account. Your data is automatically saved to the cloud.</li>
+            <li><strong>Guest / Demo Mode</strong> – Try the app without signing in using the demo buttons. Data is stored locally only (no cloud sync).</li>
+            <li><strong>Onboarding</strong> – After signing up, you’ll be guided to set your profile: name, class, subjects, school timings, transport, and study goals.</li>
+            <li><strong>Cloud Sync</strong> – When signed in, all your data (tasks, exams, habits, notes, etc.) syncs across devices automatically.</li>
+            <li><strong>Reset Data</strong> – Use the “Reset All Data” button in the sidebar to clear everything and start over.</li>
+          </ul>
+          <div class="manual-tip">💡 Your data is always saved locally as a backup. If you sign in, cloud storage is used in addition to local storage.</div>
+        </div>
+        <div class="divhr"></div>
+        <div class="manual-section">
+          <h3>✅ Tasks &amp; Syllabus</h3>
+          <ul>
+            <li>Add tasks with a <strong>Subject</strong> tag – they are linked to your exams.</li>
+            <li>When you add an Exam, enter its <strong>Syllabus topics</strong> (comma separated).</li>
+            <li>As you complete tasks for that subject, the <strong>Syllabus %</strong> rises automatically based on completed vs. total tasks.</li>
+            <li>Tasks have priority (High/Medium/Low) and due dates. Overdue tasks are highlighted.</li>
+          </ul>
+          <div class="manual-tip">💡 Completing a task gives you +10 XP. Every Pomodoro session also adds XP!</div>
+        </div>
+        <div class="divhr"></div>
+        <div class="manual-section">
+          <h3>⏱ Study Timer (Pomodoro)</h3>
+          <ul>
+            <li>Choose Focus, Short Break, or Long Break durations (customizable).</li>
+            <li>Every completed Focus session adds to your <strong>Total Study Hours</strong> and daily/weekly stats.</li>
+            <li>Select a task from the dropdown to associate your session.</li>
+            <li>History shows all your sessions for the day.</li>
+          </ul>
+        </div>
+        <div class="divhr"></div>
+        <div class="manual-section">
+          <h3>📅 Schedule Builder</h3>
+          <ul>
+            <li>Click <strong>Auto-Schedule</strong> to generate a smart timetable based on your subjects and study preferences.</li>
+            <li>Manually add blocks via the <strong>+ Add Block</strong> button (choose subject, day, time).</li>
+            <li>Click the ✕ on any block to remove it.</li>
+            <li>If you have transport enabled, bus blocks appear automatically in the schedule.</li>
+          </ul>
         </div>
       </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="manual-section">
+          <h3>📊 Insights (Live Data)</h3>
+          <ul>
+            <li>All charts update as you complete tasks and Pomodoro sessions.</li>
+            <li><strong>Weekly Study Hours</strong> bar chart shows actual focus minutes.</li>
+            <li><strong>Weak Spots</strong> are subjects with the most pending tasks.</li>
+            <li><strong>Subject Performance</strong> table shows completion rates per subject.</li>
+          </ul>
+        </div>
+        <div class="divhr"></div>
+        <div class="manual-section">
+          <h3>🤖 AI Study Planner</h3>
+          <ul>
+            <li>Uses your live data: exams, tasks, study hours, subjects, commute, streak, etc.</li>
+            <li>Ask for a daily plan, exam strategy, time management, memory tips, or motivation.</li>
+            <li>Use the <strong>Quick Prompts</strong> buttons for common requests.</li>
+            <li>The AI knows if you're a JEE/NEET aspirant or in a specific class.</li>
+          </ul>
+        </div>
+        <div class="divhr"></div>
+        <div class="manual-section">
+          <h3>🏆 XP &amp; Leaderboard</h3>
+          <ul>
+            <li><strong>XP Points:</strong> Task completed = 10 XP, Pomodoro session = 15 XP, Daily streak = 20 XP/day, Note saved = 5 XP, Exam added = 10 XP, 100% syllabus = 100 XP.</li>
+            <li><strong>Streak:</strong> Increases when you complete at least one Pomodoro session per day.</li>
+            <li><strong>Badges</strong> are earned automatically (e.g., Week Hero, Month Master, Task Pro).</li>
+            <li>Leaderboard ranks you against other users (only visible for signed-in users; demo users see themselves only).</li>
+          </ul>
+        </div>
+        <div class="divhr"></div>
+        <div class="manual-section">
+          <h3>🎯 Goals &amp; Habits</h3>
+          <ul>
+            <li>Set a daily study goal (hours). The progress bar shows your achievement.</li>
+            <li>Weekly habit tracker – click on any day to mark a habit as done. Missed days appear dimmed.</li>
+            <li>Add custom habits (e.g., “Read 10 pages”, “Exercise”).</li>
+            <li>Subject time allocation pie chart shows task distribution.</li>
+          </ul>
+        </div>
+        <div class="divhr"></div>
+        <div class="manual-section">
+          <h3>☁️ Cloud &amp; Privacy</h3>
+          <ul>
+            <li>When signed in, data is stored in <strong>Firebase Firestore</strong> and also locally.</li>
+            <li>Guest/demo mode uses only <strong>localStorage</strong> – data never leaves your browser.</li>
+            <li>You can sign out and sign in on any device – your data follows you.</li>
+            <li>To completely wipe your cloud data, use “Reset All Data” while signed in.</li>
+          </ul>
+          <div class="manual-tip">💡 StudyFlow does not sell or share your data. All cloud data is encrypted and accessible only by you.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /pages-wrap -->
 
-      </div><!-- /pages-wrap -->
+      <!-- DAILY HISTORY PAGE -->
+      <div class="page" id="pg-history">
+        <div class="ph"><div class="ph-left"><h1>Daily History</h1><p>Your completed tasks archived by day</p></div></div>
+        <div id="history-list"><div class="empty-state"><div class="ei">📆</div><p>No history yet — complete tasks each day to build your record!</p></div></div>
+      </div>
 
       <!-- FOOTER — inside scroll area, appears at bottom of all content -->
       <footer class="footer">
@@ -1015,8 +1202,6 @@ body:hover::-webkit-scrollbar-thumb {
   <div class="help-tooltip" id="help-tooltip">
     <div class="help-tooltip-title">📖 Quick Help</div>
     <a onclick="goto('manual');toggleHelp()">📖 User Manual</a>
-    <a onclick="goto('dashboard');toggleHelp()">🏠 Dashboard</a>
-    <a onclick="goto('ai');toggleHelp()">🤖 Ask AI Planner</a>
     <a onclick="goto('profile');toggleHelp()">👤 My Profile</a>
     <a onclick="confirmReset();toggleHelp()">🔄 Reset Data</a>
     <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);">Data saved locally in your browser</div>
@@ -1126,7 +1311,26 @@ body:hover::-webkit-scrollbar-thumb {
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════ CONSTANTS ══════
+// ════════════════════════════════════════
+// FIREBASE INIT
+// ════════════════════════════════════════
+const firebaseConfig = {
+  apiKey: "AIzaSyAIi1ctD968AX7UbuO_ibFPKgdsxgBxVKU",
+  authDomain: "studyflow-app-e9b89.firebaseapp.com",
+  projectId: "studyflow-app-e9b89",
+  storageBucket: "studyflow-app-e9b89.firebasestorage.app",
+  messagingSenderId: "665692495596",
+  appId: "1:665692495596:web:a2576aee52c8e5fa384fc9"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+let currentUID = null; // null = demo/guest mode
+let isSavingToCloud = false;
+
+// ════════════════════════════════════════
+// CONSTANTS
+// ════════════════════════════════════════
 const LS_KEY='studyflow_v3';
 const ALL_SUBJECTS=['Mathematics','Physics','Chemistry','Biology','Science','English','Hindi','History','Geography','Social Studies','Computer Science','EVS','Other'];
 const SC={Mathematics:'tblue',Physics:'tred',Chemistry:'tgreen',Biology:'tteal',Science:'tpink',English:'tamber',Hindi:'tpink',History:'tpurple',Geography:'tteal','Social Studies':'tamber','Computer Science':'tblue',EVS:'tgreen',Other:'tblue'};
@@ -1135,13 +1339,131 @@ const SB={Mathematics:'math',Physics:'phys',Chemistry:'chem',Biology:'bio',Scien
 const DAYS7=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const TIMES=['6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00'];
 
-// ══════ STATE ══════
-function freshState(){return{user:null,tasks:[],exams:[],habits:[],notes:[],resources:[],schedule:[],groups:[],streak:0,lastStudyDate:null,lastTaskResetDate:null,xp:0,totalStudyMins:0,weekMins:[0,0,0,0,0,0,0],pomSessions:[],pomTodayMins:0,pomSession:1,aiMsgs:[],nid:1,leaderboard:[]};}
-let S=freshState();
+// ════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════
+function freshState(){return{user:null,tasks:[],exams:[],habits:[],notes:[],resources:[],schedule:[],groups:[],streak:0,lastStudyDate:null,lastTaskResetDate:null,xp:0,totalStudyMins:0,weekMins:[0,0,0,0,0,0,0],pomSessions:[],pomTodayMins:0,pomSession:1,aiMsgs:[],nid:1,leaderboard:[],dailyHistory:[]};}
+let S=freshState();  // ✅ Only ONE declaration
 
-// ══════ LOCALSTORAGE ══════
+// ════════════════════════════════════════
+// STORAGE — localStorage + Firestore
+// ════════════════════════════════════════
 function saveLS(){try{localStorage.setItem(LS_KEY,JSON.stringify(S));}catch(e){}}
 function loadLS(){try{const d=localStorage.getItem(LS_KEY);if(d){S={...freshState(),...JSON.parse(d)};return true;}}catch(e){}return false;}
+
+async function saveCloud(){
+  if(!currentUID||isSavingToCloud)return;
+  isSavingToCloud=true;
+  try{
+    const data={...S};
+    delete data.user?.musicPlaylist;
+    await db.collection('users').doc(currentUID).set(data);
+  }catch(e){console.warn('Cloud save failed:',e);}
+  isSavingToCloud=false;
+}
+
+async function loadCloud(){
+  if(!currentUID)return false;
+  try{
+    const doc=await db.collection('users').doc(currentUID).get();
+    if(doc.exists){S={...freshState(),...doc.data()};saveLS();return true;}
+  }catch(e){console.warn('Cloud load failed:',e);}
+  return false;
+}
+
+// ✅ FIXED: Save to both local and cloud (no recursion)
+function save(){
+  saveLS();  // ✅ Changed from save() to saveLS()
+  if(currentUID) saveCloud();
+}
+
+// ════════════════════════════════════════
+// AUTH PANEL
+// ════════════════════════════════════════
+function showAuthScreen(){
+  document.getElementById('auth-screen').style.display='block';
+  document.getElementById('onboard').style.display='none';
+  document.getElementById('app').style.display='none';
+  document.getElementById('float-help').style.display='none';
+}
+function hideAuthLoading(){
+  document.getElementById('auth-loading').style.display='none';
+  document.getElementById('auth-box').style.display='block';
+}
+function showAuthLoading(){
+  document.getElementById('auth-loading').style.display='block';
+  document.getElementById('auth-box').style.display='none';
+}
+function showAuthErr(msg){const el=document.getElementById('auth-err');el.textContent=msg;el.style.display='block';setTimeout(()=>el.style.display='none',4000);}
+function switchAuthTab(tab){
+  document.getElementById('tab-signin').classList.toggle('on',tab==='signin');
+  document.getElementById('tab-signup').classList.toggle('on',tab==='signup');
+  document.getElementById('form-signin').classList.toggle('on',tab==='signin');
+  document.getElementById('form-signup').classList.toggle('on',tab==='signup');
+}
+async function signInGoogle(){
+  showAuthLoading();
+  try{
+    const provider=new firebase.auth.GoogleAuthProvider();
+    await auth.signInWithPopup(provider);
+  }catch(e){hideAuthLoading();showAuthErr(e.message||'Google sign-in failed');}
+}
+async function signInEmail(){
+  const email=document.getElementById('si-email').value.trim();
+  const pass=document.getElementById('si-pass').value;
+  if(!email||!pass){showAuthErr('Enter email and password');return;}
+  showAuthLoading();
+  try{await auth.signInWithEmailAndPassword(email,pass);}
+  catch(e){hideAuthLoading();showAuthErr(friendlyAuthErr(e.code));}
+}
+async function signUpEmail(){
+  const name = document.getElementById('su-name').value.trim();
+  const email = document.getElementById('su-email').value.trim();
+  const pass = document.getElementById('su-pass').value;
+  if(!name){ showAuthErr('Enter your name'); return; }
+  if(!email || !email.includes('@')){ showAuthErr('Enter a valid email'); return; }
+  if(!pass || pass.length < 6){ showAuthErr('Password must be at least 6 characters'); return; }
+  showAuthLoading();
+  try{
+    const cred = await auth.createUserWithEmailAndPassword(email, pass);
+    await cred.user.updateProfile({ displayName: name });
+    // 🧹 Clear any leftover demo/local data
+    localStorage.removeItem(LS_KEY);
+    S = freshState();
+    // The observer will now see a new Firebase user with no Firestore doc → onboarding
+  } catch(e){
+    hideAuthLoading();
+    let userMsg = '';
+    switch(e.code){
+      case 'auth/email-already-in-use': userMsg = 'An account already exists with this email. Sign in instead.'; break;
+      case 'auth/invalid-email': userMsg = 'Invalid email address.'; break;
+      case 'auth/weak-password': userMsg = 'Password is too weak (min 6 chars).'; break;
+      case 'auth/operation-not-allowed': userMsg = 'Email/Password sign-up is disabled. Enable it in Firebase Console.'; break;
+      default: userMsg = e.message;
+    }
+    showAuthErr(userMsg);
+    console.error('Sign-up error:', e);
+  }
+}
+async function forgotPassword(){
+  const email=document.getElementById('si-email').value.trim();
+  if(!email){showAuthErr('Enter your email first');return;}
+  try{await auth.sendPasswordResetEmail(email);showAuthErr('✅ Reset email sent! Check your inbox.');}
+  catch(e){showAuthErr(friendlyAuthErr(e.code));}
+}
+function friendlyAuthErr(code){
+  const m={
+    'auth/user-not-found':'No account found with this email',
+    'auth/wrong-password':'Incorrect password',
+    'auth/email-already-in-use':'An account already exists with this email',
+    'auth/invalid-email':'Invalid email address',
+    'auth/weak-password':'Password is too weak (min 6 chars)',
+    'auth/too-many-requests':'Too many attempts. Try again later.',
+    'auth/network-request-failed':'Network error. Check your connection.',
+    'auth/popup-closed-by-user':'Sign-in popup was closed',
+  };
+  return m[code]||'An error occurred. Please try again.';
+}
 
 // ══════ HELPERS ══════
 function today(){return new Date().toISOString().split('T')[0];}
@@ -1159,12 +1481,12 @@ function toggleHelp(){document.getElementById('help-tooltip').classList.toggle('
 document.addEventListener('click',e=>{const fh=document.getElementById('float-help');if(fh&&!fh.contains(e.target))document.getElementById('help-tooltip').classList.remove('open');});
 
 // ══════ XP ══════
-function addXP(pts,reason){S.xp=(S.xp||0)+pts;saveLS();toast(`+${pts} XP — ${reason} 🎉`);}
+function addXP(pts,reason){S.xp=(S.xp||0)+pts;save();toast(`+${pts} XP — ${reason} 🎉`);}
 function calcXP(){return(S.tasks.filter(t=>t.done).length*10)+(Math.floor(S.totalStudyMins/25)*15)+(S.streak*20)+(S.notes.length*5)+(S.exams.length*10);}
 function getBadges(){const b=[];if(S.streak>=7)b.push({icon:'🏅',name:'Week Hero'});if(S.streak>=30)b.push({icon:'🌟',name:'Month Master'});if(S.tasks.filter(t=>t.done).length>=10)b.push({icon:'⚡',name:'Task Pro'});if(S.totalStudyMins>=600)b.push({icon:'📚',name:'10hr Club'});if(Math.floor(S.totalStudyMins/25)>=1)b.push({icon:'🍅',name:'Focuser'});return b;}
 
 // ══════ STREAK ══════
-function updateStreak(){const td=today();if(S.lastStudyDate===td)return;const yesterday=dFromNow(-1);if(S.lastStudyDate===yesterday){S.streak=(S.streak||0)+1;}else if(S.lastStudyDate!==td){S.streak=1;}S.lastStudyDate=td;saveLS();}
+function updateStreak(){const td=today();if(S.lastStudyDate===td)return;const yesterday=dFromNow(-1);if(S.lastStudyDate===yesterday){S.streak=(S.streak||0)+1;}else if(S.lastStudyDate!==td){S.streak=1;}S.lastStudyDate=td;save();}
 
 // ══════ SYLLABUS ══════
 function getSylCompletion(exam){const sub=S.tasks.filter(t=>t.subj===exam.subj);const done=sub.filter(t=>t.done).length;if(!sub.length)return 0;return Math.round((done/sub.length)*100);}
@@ -1192,10 +1514,25 @@ function doRegister(){
   const ce=parseInt(document.getElementById('ob-ce').value)||0;
   const subjects=Array.from(document.querySelectorAll('#ob-subj-check input:checked')).map(c=>c.value);
   const modeLabel=mode==='jee'?'JEE Aspirant':mode==='neet'?'NEET Aspirant':'Class '+mode.replace('class','');
-  S=freshState();
-  S.user={name,mode,displayMode:modeLabel,goal,hasTransport:transportOn,cm,ce,schoolStart:document.getElementById('ob-start').value,schoolEnd:document.getElementById('ob-end').value,subjects:subjects.length?subjects:['Mathematics','English'],studyTime:document.getElementById('ob-studytime').value};
-  S.habits=[{id:S.nid++,name:'Daily Revision',done:[0,0,0,0,0,0,0]},{id:S.nid++,name:'Practice Problems',done:[0,0,0,0,0,0,0]},{id:S.nid++,name:'Read Textbook',done:[0,0,0,0,0,0,0]}];
-  saveLS();launchApp();
+  // Preserve any existing Firebase user data, just update profile
+  S.user={
+    name,mode,displayMode:modeLabel,goal,
+    hasTransport:transportOn,cm,ce,
+    schoolStart:document.getElementById('ob-start').value,
+    schoolEnd:document.getElementById('ob-end').value,
+    subjects:subjects.length?subjects:['Mathematics','English'],
+    studyTime:document.getElementById('ob-studytime').value
+  };
+  if(!S.habits||!S.habits.length){
+    S.habits=[
+      {id:S.nid++,name:'Daily Revision',done:[0,0,0,0,0,0,0]},
+      {id:S.nid++,name:'Practice Problems',done:[0,0,0,0,0,0,0]},
+      {id:S.nid++,name:'Read Textbook',done:[0,0,0,0,0,0,0]}
+    ];
+  }
+  S.lastTaskResetDate=today();
+  save();
+  launchApp();
 }
 function demoLogin(mode){
   const demos={
@@ -1206,11 +1543,17 @@ function demoLogin(mode){
   };
   S=freshState();S.user=demos[mode];
   S.habits=[{id:S.nid++,name:'Daily Revision',done:[0,0,0,0,0,0,0]},{id:S.nid++,name:'Practice Problems',done:[0,0,0,0,0,0,0]},{id:S.nid++,name:'Read Textbook',done:[0,0,0,0,0,0,0]}];
-  saveLS();launchApp();
+  currentUID=null; // guest mode — no cloud save
+  saveLS(); // only local
+  checkDailyReset();
+  launchApp();
+  toast('Demo mode — sign in to save your data ☁️','warn');
 }
 
 // ══════ LAUNCH ══════
 function launchApp(){
+  // Hide all entry screens
+  document.getElementById('auth-screen').style.display='none';
   document.getElementById('onboard').style.display='none';
   document.getElementById('app').style.display='flex';
   document.getElementById('float-help').style.display='flex';
@@ -1229,6 +1572,10 @@ function setupSidebar(){
   document.getElementById('sb-av').textContent=av;
   document.getElementById('sb-name').textContent=u.name;
   document.getElementById('sb-class').textContent=u.displayMode+' · '+(S.streak||0)+'🔥';
+  // Show cloud vs guest indicator
+  const badge=document.getElementById('sb-sync-badge');
+  if(badge)badge.title=currentUID?'Cloud sync active — data saved':'Guest mode — sign in to sync';
+  if(badge)badge.textContent=currentUID?'☁️':'👤';
   const h=new Date().getHours();
   document.getElementById('dash-greet').textContent=(h<12?'Good morning':h<17?'Good afternoon':'Good evening')+', '+u.name.split(' ')[0].replace(' (Demo)','')+' 👋';
   document.getElementById('dash-date').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
@@ -1253,7 +1600,7 @@ function goto(id){
   if(bnMap[id]){const el=document.getElementById(bnMap[id]);if(el)el.classList.add('on');}
   // Scroll main area to top on page change
   const ma=document.querySelector('.main-area');if(ma)ma.scrollTop=0;
-  const fn={tasks:renderTasks,exams:renderExamsPage,goals:renderGoals,notes:renderNotes,insights:renderInsights,leaderboard:renderLB,groups:renderGroups,schedule:renderSched,pomodoro:refreshPomoTasks,ai:initAI,profile:initProfile};
+  const fn={tasks:renderTasks,exams:renderExamsPage,goals:renderGoals,notes:renderNotes,insights:renderInsights,leaderboard:renderLB,groups:renderGroups,schedule:renderSched,pomodoro:refreshPomoTasks,ai:initAI,profile:initProfile,history:renderHistory};
   if(fn[id])fn[id]();
 }
 // ══════ MOBILE SIDEBAR ══════
@@ -1270,6 +1617,9 @@ function closeSidebar(){
 
 // ══════ DASHBOARD ══════
 function renderDashboard(){
+  // Show/hide guest banner
+  const gb=document.getElementById('guest-banner');
+  if(gb)gb.style.display=currentUID?'none':'flex';
   const u=S.user,done=S.tasks.filter(t=>t.done).length,pending=S.tasks.filter(t=>!t.done).length;
   const nearest=S.exams.length?[...S.exams].sort((a,b)=>a.date.localeCompare(b.date))[0]:null;
   const xp=calcXP(),totalHours=(S.totalStudyMins||0)/60;
@@ -1313,10 +1663,10 @@ function saveTask(){
   if(id){const t=S.tasks.find(t=>t.id==id);if(t)Object.assign(t,data);toast('Task updated ✓');}
   else{S.tasks.push({id:S.nid++,...data,done:false});toast('Task added! ✅');}
   document.getElementById('mt-eid').value='';document.getElementById('m-task-title').textContent='Add Task';document.getElementById('mt-name').value='';document.getElementById('mt-notes').value='';
-  closeM('m-task');saveLS();renderTasks();renderDashboard();
+  closeM('m-task');save();renderTasks();renderDashboard();
 }
-function toggleTask(id){const t=S.tasks.find(t=>t.id===id);if(t){t.done=!t.done;if(t.done){addXP(10,'Task completed');updateStreak();}}saveLS();renderTasks();renderDashboard();}
-function delTask(id){if(!confirm('Delete this task?'))return;S.tasks=S.tasks.filter(t=>t.id!==id);saveLS();renderTasks();renderDashboard();toast('Task removed','warn');}
+function toggleTask(id){const t=S.tasks.find(t=>t.id===id);if(t){t.done=!t.done;if(t.done){addXP(10,'Task completed');updateStreak();}}save();renderTasks();renderDashboard();}
+function delTask(id){if(!confirm('Delete this task?'))return;S.tasks=S.tasks.filter(t=>t.id!==id);save();renderTasks();renderDashboard();toast('Task removed','warn');}
 function checkAlerts(){const td=today();const ov=S.tasks.filter(t=>t.due<td&&!t.done);if(ov.length)toast(`⚠️ ${ov.length} overdue task${ov.length>1?'s':''}!`,'warn');else toast('All tasks on track ✅');}
 
 // ══════ SCHEDULE ══════
@@ -1324,7 +1674,7 @@ function renderScheduleDefault(){
   S.schedule=[];const u=S.user,subjects=u.subjects||['Mathematics'],mode=u.mode,isComp=mode==='jee'||mode==='neet',baseRow=isComp?11:12;
   for(let d=0;d<(isComp?7:6);d++){const s1=subjects[d%subjects.length],s2=subjects[(d+2)%subjects.length];S.schedule.push({id:S.nid++,subj:s1,cls:SB[s1]||'math',day:d,row:baseRow,label:s1});if(isComp||['class9','class10','class11','class12'].includes(mode))S.schedule.push({id:S.nid++,subj:s2,cls:SB[s2]||'eng',day:d,row:baseRow+1,label:s2});}
   if(u.hasTransport)for(let d=0;d<5;d++)S.schedule.push({id:S.nid++,subj:'Transport',cls:'transport',day:d,row:2,label:'🚌 Bus'});
-  saveLS();renderSched();
+  save();renderSched();
 }
 function renderSched(){
   const g=document.getElementById('sched-grid');
@@ -1332,14 +1682,14 @@ function renderSched(){
   TIMES.forEach((t,ri)=>{h+=`<div class="st">${t}</div>`;for(let d=0;d<7;d++){const b=S.schedule.find(s=>s.day===d&&s.row===ri);h+=`<div class="sc-cell">${b?`<div class="sblk sblk-${b.cls||'math'}"><span>${b.label}</span><span class="sblk-del" onclick="delSchedBlock(${b.id})">✕</span></div>`:''}</div>`;}});
   g.innerHTML=h;
 }
-function delSchedBlock(id){S.schedule=S.schedule.filter(b=>b.id!==id);saveLS();renderSched();}
+function delSchedBlock(id){S.schedule=S.schedule.filter(b=>b.id!==id);save();renderSched();}
 function autoSched(){
   S.schedule=[];const u=S.user,subjects=u.subjects||['Mathematics'],mode=u.mode,isComp=mode==='jee'||mode==='neet',baseRow=isComp?11:12;
   for(let d=0;d<7;d++)for(let i=0;i<Math.min(isComp?3:2,subjects.length);i++){const s=subjects[(d+i)%subjects.length];S.schedule.push({id:S.nid++,subj:s,cls:SB[s]||'math',day:d,row:baseRow+i,label:s});}
   if(u.hasTransport)for(let d=0;d<5;d++)S.schedule.push({id:S.nid++,subj:'Transport',cls:'transport',day:d,row:2,label:'🚌 Bus'});
-  saveLS();renderSched();toast('Smart schedule generated! ⚡');
+  save();renderSched();toast('Smart schedule generated! ⚡');
 }
-function addSchedBlock(){const s=document.getElementById('ms-subj').value,d=parseInt(document.getElementById('ms-day').value),hr=parseInt(document.getElementById('ms-start').value.split(':')[0]),row=TIMES.indexOf(hr+':00');if(row>=0)S.schedule.push({id:S.nid++,subj:s,cls:SB[s]||'math',day:d,row,label:s});closeM('m-sched');saveLS();renderSched();toast('Block added!');}
+function addSchedBlock(){const s=document.getElementById('ms-subj').value,d=parseInt(document.getElementById('ms-day').value),hr=parseInt(document.getElementById('ms-start').value.split(':')[0]),row=TIMES.indexOf(hr+':00');if(row>=0)S.schedule.push({id:S.nid++,subj:s,cls:SB[s]||'math',day:d,row,label:s});closeM('m-sched');save();renderSched();toast('Block added!');}
 
 // ══════ EXAMS ══════
 function openAddExam(){document.getElementById('m-exam-title').textContent='Add Exam';document.getElementById('me-eid').value='';document.getElementById('me-subj').value='';document.getElementById('me-syl').value='';openM('m-exam');}
@@ -1357,9 +1707,9 @@ function saveExam(){
   if(id){const e=S.exams.find(e=>e.id==id);if(e)Object.assign(e,data);toast('Exam updated ✓');}
   else{S.exams.push({id:S.nid++,...data});toast('Exam added! +10 XP 📅');S.xp+=10;}
   document.getElementById('me-eid').value='';document.getElementById('m-exam-title').textContent='Add Exam';document.getElementById('me-subj').value='';document.getElementById('me-syl').value='';
-  closeM('m-exam');saveLS();renderExamsPage();renderDashboard();
+  closeM('m-exam');save();renderExamsPage();renderDashboard();
 }
-function delExam(id){if(!confirm('Remove this exam?'))return;S.exams=S.exams.filter(e=>e.id!==id);saveLS();renderExamsPage();renderDashboard();toast('Exam removed','warn');}
+function delExam(id){if(!confirm('Remove this exam?'))return;S.exams=S.exams.filter(e=>e.id!==id);save();renderExamsPage();renderDashboard();toast('Exam removed','warn');}
 
 // ══════ GOALS & HABITS ══════
 function renderGoals(){
@@ -1371,10 +1721,10 @@ function renderGoals(){
   const dLabels=['M','T','W','T','F','S','S'],todayDow=new Date().getDay()===0?6:new Date().getDay()-1;
   document.getElementById('habit-list').innerHTML=`<div style="display:flex;gap:4px;justify-content:flex-end;margin-bottom:8px;">${dLabels.map(d=>`<div style="font-size:10px;color:var(--text3);width:24px;text-align:center;">${d}</div>`).join('')}</div>`+(S.habits.length?S.habits.map(h=>`<div class="habit-row"><div style="flex:1;font-size:13px;font-weight:600;">${h.name}</div><div style="display:flex;gap:4px;">${(h.done||[0,0,0,0,0,0,0]).map((d,i)=>`<div class="hdot ${d?'done':i<todayDow?'miss':''}" onclick="togHabit(${h.id},${i})">${d?'✓':''}</div>`).join('')}</div><button class="ibtn" onclick="delHabit(${h.id})" style="margin-left:6px;">🗑</button></div>`).join(''):'<div style="color:var(--text3);font-size:13px;padding:12px 0;">No habits yet.</div>');
 }
-function togHabit(id,day){const h=S.habits.find(h=>h.id===id);if(h){h.done[day]=h.done[day]?0:1;saveLS();renderGoals();}}
-function addHabit(){const n=document.getElementById('mh-name').value.trim();if(!n){toast('Enter habit name','err');return;}S.habits.push({id:S.nid++,name:n,done:[0,0,0,0,0,0,0]});document.getElementById('mh-name').value='';closeM('m-habit');saveLS();renderGoals();toast('Habit added!');}
-function delHabit(id){S.habits=S.habits.filter(h=>h.id!==id);saveLS();renderGoals();}
-function onGoalSlider(v){document.getElementById('goal-slider-label').textContent=v+' hrs';if(S.user){S.user.goal=parseInt(v);saveLS();renderDashboard();}}
+function togHabit(id,day){const h=S.habits.find(h=>h.id===id);if(h){h.done[day]=h.done[day]?0:1;save();renderGoals();}}
+function addHabit(){const n=document.getElementById('mh-name').value.trim();if(!n){toast('Enter habit name','err');return;}S.habits.push({id:S.nid++,name:n,done:[0,0,0,0,0,0,0]});document.getElementById('mh-name').value='';closeM('m-habit');save();renderGoals();toast('Habit added!');}
+function delHabit(id){S.habits=S.habits.filter(h=>h.id!==id);save();renderGoals();}
+function onGoalSlider(v){document.getElementById('goal-slider-label').textContent=v+' hrs';if(S.user){S.user.goal=parseInt(v);save();renderDashboard();}}
 
 // ══════ POMODORO ══════
 let pomInt=null,pomRunning=false,pomElapsed=0,pomMode='focus',pomSession=1;
@@ -1397,7 +1747,7 @@ function pomNext(){
     const dayI=new Date().getDay()===0?6:new Date().getDay()-1;if(!S.weekMins)S.weekMins=[0,0,0,0,0,0,0];S.weekMins[dayI]=(S.weekMins[dayI]||0)+mins;
     S.pomSessions=S.pomSessions||[];S.pomSessions.push({type:'Focus',mins,time:new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})});
     document.getElementById('pomo-total').textContent=Math.round(S.pomTodayMins)+' min';document.getElementById('total-hrs-display').textContent=minsToH(S.totalStudyMins);
-    updateStreak();addXP(15,'Pomodoro session');saveLS();renderPomoHistory();renderDashboard();toast('Focus done! +15 XP 🎉');
+    updateStreak();addXP(15,'Pomodoro session');save();renderPomoHistory();renderDashboard();toast('Focus done! +15 XP 🎉');
     pomMode=pomSession%4===0?'long':'short';
   }else{pomMode='focus';pomSession++;toast('Break over! 💪');}
   pomElapsed=0;pomUpdateUI();
@@ -1430,10 +1780,10 @@ function renderNotes(){
   document.getElementById('res-list').innerHTML=S.resources.length?S.resources.map(r=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><a class="res-link" href="${r.url}" target="_blank" style="flex:1;">🔗 ${r.title}<span class="tag ${SC[r.subj]||'tblue'}" style="margin-left:auto;flex-shrink:0;">${r.subj}</span></a><button class="ibtn" onclick="delRes(${r.id})" style="flex-shrink:0;">🗑</button></div>`):'<div class="empty-state" style="padding:20px;"><div class="ei">🔗</div><p>No resources yet</p></div>';
 }
 function openEditNote(id){const n=S.notes.find(n=>n.id===id);if(!n)return;document.getElementById('m-note-title').textContent='Edit Note';document.getElementById('mn-eid').value=id;document.getElementById('mn-title').value=n.title;document.getElementById('mn-subj').value=n.subj;document.getElementById('mn-content').value=n.content;openM('m-note');}
-function saveNote(){const title=document.getElementById('mn-title').value.trim();if(!title){toast('Enter a title','err');return;}const id=document.getElementById('mn-eid').value,data={title,subj:document.getElementById('mn-subj').value,content:document.getElementById('mn-content').value,created:today()};if(id){const n=S.notes.find(n=>n.id==id);if(n)Object.assign(n,data);toast('Note updated ✓');}else{S.notes.unshift({id:S.nid++,...data});S.xp+=5;toast('Note saved! +5 XP 📓');}document.getElementById('mn-eid').value='';document.getElementById('m-note-title').textContent='Add Note';document.getElementById('mn-title').value='';document.getElementById('mn-content').value='';closeM('m-note');saveLS();renderNotes();}
-function delNote(id){if(!confirm('Delete this note?'))return;S.notes=S.notes.filter(n=>n.id!==id);saveLS();renderNotes();toast('Note deleted','warn');}
-function saveRes(){const title=document.getElementById('mr-title').value.trim(),url=document.getElementById('mr-url').value.trim();if(!title||!url){toast('Fill title and URL','err');return;}S.resources.unshift({id:S.nid++,title,url,subj:document.getElementById('mr-subj').value});document.getElementById('mr-title').value='';document.getElementById('mr-url').value='';closeM('m-res');saveLS();renderNotes();toast('Resource saved! 🔗');}
-function delRes(id){if(!confirm('Remove this resource?'))return;S.resources=S.resources.filter(r=>r.id!==id);saveLS();renderNotes();toast('Removed','warn');}
+function saveNote(){const title=document.getElementById('mn-title').value.trim();if(!title){toast('Enter a title','err');return;}const id=document.getElementById('mn-eid').value,data={title,subj:document.getElementById('mn-subj').value,content:document.getElementById('mn-content').value,created:today()};if(id){const n=S.notes.find(n=>n.id==id);if(n)Object.assign(n,data);toast('Note updated ✓');}else{S.notes.unshift({id:S.nid++,...data});S.xp+=5;toast('Note saved! +5 XP 📓');}document.getElementById('mn-eid').value='';document.getElementById('m-note-title').textContent='Add Note';document.getElementById('mn-title').value='';document.getElementById('mn-content').value='';closeM('m-note');save();renderNotes();}
+function delNote(id){if(!confirm('Delete this note?'))return;S.notes=S.notes.filter(n=>n.id!==id);save();renderNotes();toast('Note deleted','warn');}
+function saveRes(){const title=document.getElementById('mr-title').value.trim(),url=document.getElementById('mr-url').value.trim();if(!title||!url){toast('Fill title and URL','err');return;}S.resources.unshift({id:S.nid++,title,url,subj:document.getElementById('mr-subj').value});document.getElementById('mr-title').value='';document.getElementById('mr-url').value='';closeM('m-res');save();renderNotes();toast('Resource saved! 🔗');}
+function delRes(id){if(!confirm('Remove this resource?'))return;S.resources=S.resources.filter(r=>r.id!==id);save();renderNotes();toast('Removed','warn');}
 
 // ══════ MUSIC PLAYER ══════
 let musicPlaylist=[],musicIdx=0,musicRepeatMode=false,musicShuffleMode=false,musicAudio=null,musicProgressTimer=null;
@@ -1527,7 +1877,7 @@ function sendAI(){const inp=document.getElementById('ai-inp');sendAIMsg(inp.valu
 function sendAIMsg(text){
   if(!text)return;if(!S.aiMsgs)S.aiMsgs=[];S.aiMsgs.push({role:'usr',text});renderAIMsgs();
   const el=document.getElementById('ai-msgs'),ldr=document.createElement('div');ldr.className='ai-m bot';ldr.innerHTML='<div><span class="ai-dot"></span><span class="ai-dot"></span><span class="ai-dot"></span></div>';el.appendChild(ldr);el.scrollTop=el.scrollHeight;
-  setTimeout(()=>{ldr.remove();const r=aiReply(text);S.aiMsgs.push({role:'bot',text:r});saveLS();renderAIMsgs();},900+Math.random()*600);
+  setTimeout(()=>{ldr.remove();const r=aiReply(text);S.aiMsgs.push({role:'bot',text:r});save();renderAIMsgs();},900+Math.random()*600);
 }
 function aiReply(q){
   const ql=q.toLowerCase(),u=S.user,g=u.goal,c=(u.cm||0)+(u.ce||0),isJEE=u.mode==='jee',isNEET=u.mode==='neet',isComp=isJEE||isNEET;
@@ -1552,44 +1902,172 @@ function aiReply(q){
 
 // ══════ GROUPS & LEADERBOARD ══════
 function renderGroups(){const cols=['#4f8ef7','#22c98a','#e85ca0','#22c4b4','#9b6cf5'];document.getElementById('groups-list').innerHTML=S.groups.length?S.groups.map(g=>`<div class="group-card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:11px;flex-wrap:wrap;gap:8px;"><div><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;">${g.name}</div><div style="font-size:12px;color:var(--text3);">${g.subj}</div></div><div style="display:flex;gap:8px;align-items:center;"><span class="tag tblue">${g.members.length} members</span><button class="ibtn" onclick="delGroup(${g.id})">🗑</button></div></div><div style="display:flex;align-items:center;margin-bottom:12px;">${g.members.map((m,i)=>`<div class="mem-av" style="background:${cols[i%cols.length]};">${m[0]}</div>`).join('')}<span style="font-size:12px;color:var(--text3);margin-left:10px;">${g.members.join(', ')}</span></div><button class="btn btn-ghost btn-sm">Open Room →</button></div>`):'<div class="empty-state"><div class="ei">👥</div><p>No groups yet. Create one!</p></div>';}
-function addGroup(){const n=document.getElementById('mg-name').value.trim();if(!n){toast('Enter group name','err');return;}const inv=document.getElementById('mg-inv').value.split(',').map(s=>s.trim()).filter(Boolean);S.groups.push({id:S.nid++,name:n,subj:document.getElementById('mg-subj').value||'All Subjects',members:[S.user.name,...inv]});document.getElementById('mg-name').value='';document.getElementById('mg-inv').value='';closeM('m-group');saveLS();renderGroups();toast('Group created! 👥');}
-function delGroup(id){if(!confirm('Delete group?'))return;S.groups=S.groups.filter(g=>g.id!==id);saveLS();renderGroups();}
+function addGroup(){const n=document.getElementById('mg-name').value.trim();if(!n){toast('Enter group name','err');return;}const inv=document.getElementById('mg-inv').value.split(',').map(s=>s.trim()).filter(Boolean);S.groups.push({id:S.nid++,name:n,subj:document.getElementById('mg-subj').value||'All Subjects',members:[S.user.name,...inv]});document.getElementById('mg-name').value='';document.getElementById('mg-inv').value='';closeM('m-group');save();renderGroups();toast('Group created! 👥');}
+function delGroup(id){if(!confirm('Delete group?'))return;S.groups=S.groups.filter(g=>g.id!==id);save();renderGroups();}
 function renderLB(){const xp=calcXP(),me={name:S.user.name,av:S.user.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase(),col:'#4f8ef7',pts:xp,streak:S.streak||0,tasks:S.tasks.filter(t=>t.done).length,isMe:true},lb=[me,...(S.leaderboard||[])].sort((a,b)=>b.pts-a.pts),rc=['rank-gold','rank-silver','rank-bronze'],rl=['🥇','🥈','🥉'];document.getElementById('lb-list').innerHTML=lb.map((p,i)=>`<div class="lb-item ${p.isMe?'me':''}"><div class="lb-rank ${rc[i]||''}">${rl[i]||i+1}</div><div class="lb-av" style="background:${p.col};">${p.av}</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;">${p.name}${p.isMe?' (You)':''}</div><div style="font-size:11px;color:var(--text3);">${p.streak||0}🔥 · ${p.tasks||0} tasks</div></div><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--amber);">${p.pts}</div></div>`).join('');}
 
 // ══════ PROFILE ══════
 function initProfile(){const u=S.user,xp=calcXP();document.getElementById('profile-av-big').textContent=u.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();document.getElementById('profile-name-big').textContent=u.name;document.getElementById('profile-level-big').textContent=u.displayMode;document.getElementById('profile-xp-big').textContent=xp+' XP · '+getBadges().map(b=>b.icon).join(' ');document.getElementById('edit-name').value=u.name;document.getElementById('edit-mode').value=u.mode;document.getElementById('edit-start').value=u.schoolStart||'08:00';document.getElementById('edit-end').value=u.schoolEnd||'14:30';document.getElementById('edit-goal').value=u.goal;document.getElementById('edit-commute').value=(u.cm||0)+(u.ce||0);document.getElementById('profile-stats').innerHTML=`<div style="display:flex;flex-direction:column;gap:9px;"><div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--text3);">Total Study Hours</span><span style="font-weight:700;color:var(--accent);">${(S.totalStudyMins/60).toFixed(1)} hrs</span></div><div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--text3);">Tasks Completed</span><span style="font-weight:700;color:var(--green);">${S.tasks.filter(t=>t.done).length}</span></div><div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--text3);">Total Tasks</span><span style="font-weight:700;">${S.tasks.length}</span></div><div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--text3);">Exams Tracked</span><span style="font-weight:700;">${S.exams.length}</span></div><div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--text3);">Notes Saved</span><span style="font-weight:700;">${S.notes.length}</span></div><div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--text3);">Current Streak</span><span style="font-weight:700;color:var(--amber);">${S.streak||0} days 🔥</span></div><div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--text3);">Total XP</span><span style="font-weight:700;color:var(--purple);">${xp} XP</span></div></div>`;}
-function saveProfile(){const name=document.getElementById('edit-name').value.trim()||S.user.name,mode=document.getElementById('edit-mode').value,goal=parseInt(document.getElementById('edit-goal').value)||S.user.goal,commute=parseInt(document.getElementById('edit-commute').value)||0,modeLabel=mode==='jee'?'JEE Aspirant':mode==='neet'?'NEET Aspirant':'Class '+mode.replace('class','');S.user={...S.user,name,mode,displayMode:modeLabel,goal,cm:Math.floor(commute/2),ce:Math.ceil(commute/2),hasTransport:commute>0,schoolStart:document.getElementById('edit-start').value,schoolEnd:document.getElementById('edit-end').value};saveLS();setupSidebar();setupSelects();initProfile();renderDashboard();renderGoals();toast('Profile saved! ✓');}
-function confirmReset(){if(!confirm('This will delete ALL your data (tasks, exams, sessions, streak). Are you sure?'))return;localStorage.removeItem(LS_KEY);location.reload();}
+function saveProfile(){const name=document.getElementById('edit-name').value.trim()||S.user.name,mode=document.getElementById('edit-mode').value,goal=parseInt(document.getElementById('edit-goal').value)||S.user.goal,commute=parseInt(document.getElementById('edit-commute').value)||0,modeLabel=mode==='jee'?'JEE Aspirant':mode==='neet'?'NEET Aspirant':'Class '+mode.replace('class','');S.user={...S.user,name,mode,displayMode:modeLabel,goal,cm:Math.floor(commute/2),ce:Math.ceil(commute/2),hasTransport:commute>0,schoolStart:document.getElementById('edit-start').value,schoolEnd:document.getElementById('edit-end').value};save();setupSidebar();setupSelects();initProfile();renderDashboard();renderGoals();toast('Profile saved! ✓');}
+function confirmReset(){
+  if(!confirm('This will delete ALL your data. Are you sure?'))return;
+  localStorage.removeItem(LS_KEY);
+  if(currentUID){db.collection('users').doc(currentUID).delete().catch(()=>{});}
+  auth.signOut();
+  location.reload();
+}
+
+// ══════ SIGN OUT ══════
+function doSignOut(){
+  if(!confirm('Sign out of StudyFlow?'))return;
+  save();
+  auth.signOut().then(()=>{
+    S=freshState();
+    currentUID=null;
+    document.getElementById('app').style.display='none';
+    document.getElementById('float-help').style.display='none';
+    document.getElementById('onboard').style.display='none';
+    hideAuthLoading();
+    document.getElementById('auth-screen').style.display='block';
+    switchAuthTab('signin');
+    toast('Signed out successfully','ok');
+  });
+}
 
 // ══════ MOBILE SIDEBAR ══════
 function toggleSidebar(){
   const sb=document.getElementById('sidebar'),ov=document.getElementById('sb-overlay');
-  const open=sb.classList.toggle('open');
-  ov.classList.toggle('open',open);
+  const isOpen=sb.classList.toggle('open');
+  if(ov)ov.classList.toggle('open',isOpen);
 }
 function closeSidebar(){
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('sb-overlay').classList.remove('open');
+  const sb=document.getElementById('sidebar'),ov=document.getElementById('sb-overlay');
+  if(sb)sb.classList.remove('open');
+  if(ov)ov.classList.remove('open');
 }
 
-// ══════ BOOT ══════
-window.addEventListener('DOMContentLoaded',()=>{
-  buildSubjCheck('class10');
-  if(loadLS()&&S.user){
-    const td=today();
-    // Reset today pomodoro if new day
-    if(S.lastStudyDate!==td){S.pomTodayMins=0;}
-    // Daily task reset: mark done tasks as pending again on a new day
-    if(S.lastTaskResetDate!==td){
-      S.tasks=S.tasks.map(t=>t.done?{...t,done:false,completedOn:t.completedOn||t.due}:t);
-      S.lastTaskResetDate=td;
-      saveLS();
+// ══════ DAILY RESET + HISTORY ARCHIVE ══════
+function checkDailyReset(){
+  const td=today();
+  if(S.lastTaskResetDate===td)return;
+  // Archive yesterday's completed tasks
+  const doneTasks=S.tasks.filter(t=>t.done);
+  if(doneTasks.length>0&&S.lastTaskResetDate){
+    if(!S.dailyHistory)S.dailyHistory=[];
+    const existing=S.dailyHistory.find(h=>h.date===S.lastTaskResetDate);
+    if(!existing){
+      S.dailyHistory.unshift({
+        date:S.lastTaskResetDate,
+        tasks:doneTasks.map(t=>({name:t.name,subj:t.subj,pri:t.pri})),
+        studyMins:S.pomTodayMins||0,
+        streak:S.streak||0
+      });
+      if(S.dailyHistory.length>60)S.dailyHistory=S.dailyHistory.slice(0,60);
     }
-    launchApp();
+  }
+  // Reset tasks to pending for new day
+  S.tasks=S.tasks.map(t=>({...t,done:false}));
+  // Reset today's study mins
+  S.pomTodayMins=0;
+  // Reset weekly stats if Monday
+  if(new Date().getDay()===1)S.weekMins=[0,0,0,0,0,0,0];
+  S.lastTaskResetDate=td;
+  save();
+}
+
+// ══════ HISTORY PAGE ══════
+function renderHistory(){
+  const el=document.getElementById('history-list');
+  if(!S.dailyHistory||!S.dailyHistory.length){
+    el.innerHTML='<div class="empty-state"><div class="ei">📆</div><p>No history yet — complete tasks each day to build your record!</p></div>';
+    return;
+  }
+  el.innerHTML=S.dailyHistory.map(h=>`
+    <div class="hist-day">
+      <div class="hist-day-header" onclick="this.nextElementSibling.classList.toggle('open')">
+        <div class="hist-day-date">📅 ${fmt(h.date)}</div>
+        <div class="hist-day-stats">
+          <span>✅ ${h.tasks.length} tasks</span>
+          <span>⏱ ${Math.round(h.studyMins||0)} min</span>
+          <span>🔥 ${h.streak||0}d</span>
+          <span style="color:var(--text3);font-size:11px;margin-left:4px;">▾</span>
+        </div>
+      </div>
+      <div class="hist-day-body">
+        ${h.tasks.map(t=>`<div class="hist-task-row"><span class="tag ${SC[t.subj]||'tblue'}" style="flex-shrink:0;">${t.subj}</span><span style="flex:1;padding:0 8px;">${t.name}</span><span class="tag ${t.pri==='high'?'tred':t.pri==='med'?'tamber':'tgreen'}">${t.pri}</span></div>`).join('')||'<div style="color:var(--text3);font-size:12px;">No tasks recorded</div>'}
+      </div>
+    </div>`).join('');
+}
+
+// ══════ BOOT — Firebase Auth Observer ══════
+window.addEventListener('DOMContentLoaded',()=> {
+  buildSubjCheck('class10');
+
+  // Show auth screen with form visible (not spinner) while Firebase checks
+  document.getElementById('auth-screen').style.display='block';
+  document.getElementById('onboard').style.display='none';
+  document.getElementById('app').style.display='none';
+  document.getElementById('float-help').style.display='none' });
+  // auth-box is visible, auth-loading is hidden by default
+
+  auth.onAuthStateChanged(async (fbUser) => {
+  console.log("Auth state changed. Firebase user:", fbUser ? fbUser.email : "null");
+  
+  if (fbUser) {
+    currentUID = fbUser.uid;
+    showAuthLoading();
+    try {
+      // Check if user document exists in Firestore
+      const doc = await db.collection('users').doc(currentUID).get();
+      if (doc.exists) {
+        // Existing user → load cloud data and launch app
+        S = { ...freshState(), ...doc.data() };
+        checkDailyReset();
+        hideAuthLoading();
+        launchApp();
+      } else {
+        // New user → no cloud data, show onboarding
+        S = freshState();
+        S.user = {
+          name: fbUser.displayName || fbUser.email.split('@')[0] || 'Student',
+          mode: 'class10', displayMode: 'Class 10', goal: 4,
+          hasTransport: false, cm: 0, ce: 0,
+          schoolStart: '08:00', schoolEnd: '14:30',
+          subjects: ['Mathematics', 'Science', 'English', 'Hindi', 'Social Studies'],
+          studyTime: 'Evening (5–9 PM)'
+        };
+        S.habits = [
+          { id: S.nid++, name: 'Daily Revision', done: [0,0,0,0,0,0,0] },
+          { id: S.nid++, name: 'Practice Problems', done: [0,0,0,0,0,0,0] },
+          { id: S.nid++, name: 'Read Textbook', done: [0,0,0,0,0,0,0] }
+        ];
+        S.lastTaskResetDate = today();
+        save(); // saves to both localStorage and Firestore (since currentUID is set)
+        hideAuthLoading();
+        
+        // Show onboarding screen
+        document.getElementById('auth-screen').style.display = 'none';
+        document.getElementById('onboard').style.display = 'flex';
+        document.getElementById('app').style.display = 'none';
+        document.getElementById('float-help').style.display = 'none';
+        const obName = document.getElementById('ob-name');
+        if (obName) obName.value = S.user.name;
+      }
+    } catch(e) {
+      console.error("Error loading user data:", e);
+      hideAuthLoading();
+      showAuthErr("Error loading account. Please try again.");
+    }
   } else {
-    document.getElementById('onboard').style.display='flex';
-    document.getElementById('app').style.display='none';
-    document.getElementById('float-help').style.display='none';
+    // No Firebase user → show auth screen
+    currentUID = null;
+    S = freshState();
+    document.getElementById('auth-loading').style.display = 'none';
+    document.getElementById('auth-screen').style.display = 'block';
+    document.getElementById('onboard').style.display = 'none';
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('float-help').style.display = 'none';
+    document.getElementById('auth-box').style.display = 'block';
   }
 });
 </script>
