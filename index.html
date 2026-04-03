@@ -1409,12 +1409,26 @@ async function signInGoogle(){
   }catch(e){hideAuthLoading();showAuthErr(e.message||'Google sign-in failed');}
 }
 async function signInEmail(){
-  const email=document.getElementById('si-email').value.trim();
-  const pass=document.getElementById('si-pass').value;
-  if(!email||!pass){showAuthErr('Enter email and password');return;}
+  const email = document.getElementById('si-email').value.trim();
+  const pass = document.getElementById('si-pass').value;
+  if(!email || !pass){ showAuthErr('Enter email and password'); return; }
   showAuthLoading();
-  try{await auth.signInWithEmailAndPassword(email,pass);}
-  catch(e){hideAuthLoading();showAuthErr(friendlyAuthErr(e.code));}
+  try{
+    await auth.signInWithEmailAndPassword(email, pass);
+  } catch(e){
+    hideAuthLoading();
+    let userMsg = '';
+    switch(e.code){
+      case 'auth/operation-not-allowed': 
+        userMsg = 'Email/Password sign-in is disabled. Please enable it in Firebase Console → Authentication → Sign-in methods.'; 
+        break;
+      case 'auth/user-not-found': userMsg = 'No account found. Sign up first.'; break;
+      case 'auth/wrong-password': userMsg = 'Incorrect password.'; break;
+      default: userMsg = e.message;
+    }
+    showAuthErr(userMsg);
+    console.error('Sign-in error:', e);
+  }
 }
 async function signUpEmail(){
   const name = document.getElementById('su-name').value.trim();
