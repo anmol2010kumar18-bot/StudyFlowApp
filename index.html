@@ -4,14 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>StudyFlow — Smart Student Planner</title>
-<!-- SVG favicon for modern browsers -->
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='80'%3E🎓%3C/text%3E%3C/svg%3E">
-
-<!-- Fallback PNG favicon for older browsers (32x32) -->
-<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGwSURBVFhH7ZbNSsNAFIUnCIIgCBbBhS+gGzdduBBBEARBEFy5Ed0JgiAIgiAIgiAIgiAIgiAIgiAIgiAIgiAIgiAIgiAIgiAIgiAIgiAIgiD4B/05XG5ukkknHwRuM/fMOT+ZJpP2hJDxM1jqDgAMAG8B6wFrAcMNMVXAFMBKQMiqjxo3Mh0wGxABL1n1VYODI4D5gA1AOWD/VqPCkQATgBWABHACuAIsbGpUOAKgFzAMGAKMAhYBg5salY4AOAV4BigBlgHHAWubGpWOACgDvAFy4A3gCbC9qVHpCIA3wF/AC2APMBSwr6lR6QiAD8B/wAvgGLAlYHdTo9IRAJ+AEDgDbAk4AjjY1Kh0BEAEXAAaAZcAhwCbmxqVjgC4BrwDPAJeAQ4Dljc1Kh0B8ADYBNgU0ADY1NSodATAM2APsC9gDmBrU6PSEQAFsA+wBLArYA5gaVOj0hEALwGOAI4FzAGcAdQ1NSodAfAWYAtgR8AUwPqmRqUjAHIAPoDrC5gAmAGobGpUOgLgE8A7gA1gBGC+SpsalY4A+ASwAPAU4BjA9BWgpalR6QjwC2AFYAtgK2BbU6PSEQA/AFaAaxMz4APA44CtTY1KRwD8BPC2AgYAJgC2Nn2o/lO/AdTppchAKdLjAAAAAElFTkSuQmCC">
-
-<!-- Apple Touch Icon (for iOS home screen) -->
-<link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%234f8ef7'/%3E%3Ctext x='90' y='125' font-size='90' text-anchor='middle' fill='white'%3E🎓%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎓</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <!-- Firebase -->
@@ -215,33 +208,70 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
 
 /* ══════ MOBILE RESPONSIVE ══════ */
 @media(max-width:768px){
+  /* Show top bar, hide desktop sidebar */
   .top-bar{display:flex;}
-  .sidebar{position:fixed;left:0;top:0;bottom:0;transform:translateX(-100%);height:100vh;}
-  .sidebar.open{transform:translateX(0);}
+  .sidebar{position:fixed;left:0;top:0;bottom:0;transform:translateX(-100%);height:100vh;width:260px;}
+  .sidebar.open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,.5);}
+  /* Show bottom nav */
   .bottom-nav{display:block;}
-  .shell{padding-bottom:60px;}
-  .page{padding:16px 14px 20px;}
+  /* Add space at bottom for bottom nav */
+  .shell{padding-bottom:64px;}
+  .main-area{padding-bottom:0;}
+  /* Page padding */
+  .page{padding:14px 12px 20px;}
+  /* Grids collapse */
   .g4{grid-template-columns:1fr 1fr!important;}
   .g3{grid-template-columns:1fr 1fr!important;}
   .g2{grid-template-columns:1fr!important;}
   .g21{grid-template-columns:1fr!important;}
-  .float-help{bottom:72px;right:14px;}
-  .toast{bottom:72px;right:14px;max-width:calc(100vw - 28px);}
-  .footer{padding:24px 14px 16px;}
-  .footer-inner{padding:12px 16px;}
+  /* Stat cards smaller */
+  .sc-val{font-size:22px;}
+  .sc{padding:12px 14px;}
+  /* Page header */
   .ph-left h1{font-size:20px;}
+  .ph{margin-bottom:16px;}
+  /* Float help + toast above bottom nav */
+  .float-help{bottom:74px;right:12px;}
+  .toast{bottom:74px;right:12px;max-width:calc(100vw - 24px);}
+  /* Footer compact */
+  .footer{padding:20px 12px 14px;}
+  .footer-inner{padding:10px 14px;}
+  .footer-brand h2{font-size:18px;}
+  /* Onboarding */
   .ob-left{display:none;}
   .ob-right{width:100%;}
-  .ob-form-wrap{padding:20px 16px;}
-  .sched-grid{min-width:600px;}
+  .ob-form-wrap{padding:18px 14px;}
+  /* Auth screen */
+  .auth-left{display:none;}
+  .auth-right{padding:20px 16px;}
+  /* Schedule scrollable */
+  .sched-grid{min-width:580px;}
+  /* Music player */
   .music-player{margin:6px;}
+  /* Modal */
+  .modal{padding:18px;}
+  /* Habit tracker on mobile — smaller dots */
+  .hdot{width:22px!important;height:22px!important;font-size:10px!important;border-radius:5px!important;}
+  /* Tasks */
+  .t-actions{opacity:1!important;}
+  /* Ring chart smaller */
+  .ring-wrap{width:180px;height:180px;}
+  .ring-time{font-size:36px!important;}
+  /* Pomo config */
+  .pomo-cfg{gap:6px;}
 }
 @media(max-width:480px){
   .g4{grid-template-columns:1fr 1fr!important;}
   .row2{grid-template-columns:1fr!important;}
-  .ph{flex-direction:column;}
-  .ph-right{width:100%;}
-  .sc-val{font-size:22px;}
+  .ph{flex-direction:column;gap:8px;}
+  .ph-right{width:100%;justify-content:flex-start;}
+  .ph-right .btn{font-size:11px;padding:6px 10px;}
+  .sc-val{font-size:20px;}
+  .page{padding:12px 10px 16px;}
+  /* History page */
+  .hist-day-stats{flex-wrap:wrap;gap:4px!important;justify-content:flex-end;}
+  /* Footer stack */
+  .footer-right{flex-direction:column;gap:4px!important;}
 }
 
 /* ══════ FOOTER ══════ */
@@ -393,11 +423,13 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
 .sblk:hover .sblk-del{opacity:1;}
 
 /* ══════ HABITS ══════ */
-.habit-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.habit-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
 .habit-row:last-child{border-bottom:none;}
-.hdot{width:24px;height:24px;border-radius:5px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;font-size:11px;border:1px solid var(--border);flex-shrink:0;}
+.hdot{width:26px;height:26px;border-radius:6px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:1px solid var(--border);flex-shrink:0;user-select:none;}
 .hdot.done{background:var(--green);border-color:var(--green);color:#fff;}
-.hdot.miss{background:rgba(240,92,92,.15);border-color:rgba(240,92,92,.25);}
+.hdot.miss{background:rgba(240,92,92,.12);border-color:rgba(240,92,92,.2);color:var(--red);}
+.hdot.today-dot{border-color:var(--accent);background:rgba(79,142,247,.08);}
+.hdot:hover{border-color:var(--accent);transform:scale(1.08);}
 
 /* ══════ AI ══════ */
 .ai-msgs{height:340px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;}
@@ -479,28 +511,19 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
   box-shadow: 0 0 10px rgba(0,212,255,0.7),
               0 0 20px rgba(123,92,245,0.6);
 }
-/* Chrome, Edge, Safari */
-::-webkit-scrollbar {
-  width: 6px;
+/* Hide scrollbar initially */
+body::-webkit-scrollbar-thumb {
+  opacity: 0;
 }
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: transparent;
+/* Show when hovering page */
+body:hover::-webkit-scrollbar-thumb {
+  opacity: 1;
 }
-
-/* Thumb (main bar) */
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #00d4ff, #7b5cf5);
-  border-radius: 20px;
-  transition: all 0.3s ease;
-}
-
-/* Glow on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #00ffff, #9a7bff);
-  box-shadow: 0 0 10px rgba(0,212,255,0.7),
-              0 0 20px rgba(123,92,245,0.6);
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #00d4ff transparent;
 }
 .sidebar::-webkit-scrollbar {
   width: 5px;
@@ -513,11 +536,6 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
 
 .sidebar::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 212, 255, 0.9);
-}
-/* For Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #00d4ff transparent;
 }
 </style>
 </head>
@@ -588,7 +606,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
           <button class="demo-btn" onclick="demoLogin('class10')"><span class="di">📚</span><div><div style="font-size:12px;color:var(--text);">Class 10</div></div></button>
           <button class="demo-btn" onclick="demoLogin('class5')"><span class="di">🎒</span><div><div style="font-size:12px;color:var(--text);">Class 5</div></div></button>
         </div>
-        <div style="font-size:11px;color:var(--text3);text-align:center;margin-top:14px;">© 2026 StudyFlow · Al rights are reserved by Anmol kumar & <a href="https://devsupport.co.in" target="_blank" style="color:var(--accent);text-decoration:none;">DevSupport</a></div>
+        <div style="font-size:11px;color:var(--text3);text-align:center;margin-top:14px;">© 2026 StudyFlow · <a href="https://devsupport.co.in" target="_blank" style="color:var(--accent);text-decoration:none;">DevSupport</a></div>
       </div>
     </div>
   </div>
@@ -701,7 +719,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
       </div>
     </div>
     <div style="padding:14px 28px;border-top:1px solid var(--border);margin-top:auto;">
-        <div style="font-size:11px;color:var(--text3);text-align:center;margin-top:14px;">© 2026 StudyFlow · Al rights are reserved by Anmol kumar & <a href="https://devsupport.co.in" target="_blank" style="color:var(--accent);text-decoration:none;">DevSupport</a></div>
+      <div style="font-size:11px;color:var(--text3);text-align:center;">© 2026 StudyFlow. All rights reserved.</div>
     </div>
   </div>
 </div>
@@ -1045,112 +1063,93 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
 
       <!-- USER MANUAL -->
       <div class="page" id="pg-manual">
-  <div class="ph">
-    <div class="ph-left"><h1>Help &amp; User Manual</h1><p>Everything you need to know about StudyFlow</p></div>
-  </div>
-  <div class="g2">
-    <div>
-      <div class="card" style="margin-bottom:16px;">
-        <div class="manual-section">
-          <h3>🚀 Getting Started</h3>
-          <ul>
-            <li><strong>Sign Up / Sign In</strong> – Use email/password or Google to create an account. Your data is automatically saved to the cloud.</li>
-            <li><strong>Guest / Demo Mode</strong> – Try the app without signing in using the demo buttons. Data is stored locally only (no cloud sync).</li>
-            <li><strong>Onboarding</strong> – After signing up, you’ll be guided to set your profile: name, class, subjects, school timings, transport, and study goals.</li>
-            <li><strong>Cloud Sync</strong> – When signed in, all your data (tasks, exams, habits, notes, etc.) syncs across devices automatically.</li>
-            <li><strong>Reset Data</strong> – Use the “Reset All Data” button in the sidebar to clear everything and start over.</li>
-          </ul>
-          <div class="manual-tip">💡 Your data is always saved locally as a backup. If you sign in, cloud storage is used in addition to local storage.</div>
-        </div>
-        <div class="divhr"></div>
-        <div class="manual-section">
-          <h3>✅ Tasks &amp; Syllabus</h3>
-          <ul>
-            <li>Add tasks with a <strong>Subject</strong> tag – they are linked to your exams.</li>
-            <li>When you add an Exam, enter its <strong>Syllabus topics</strong> (comma separated).</li>
-            <li>As you complete tasks for that subject, the <strong>Syllabus %</strong> rises automatically based on completed vs. total tasks.</li>
-            <li>Tasks have priority (High/Medium/Low) and due dates. Overdue tasks are highlighted.</li>
-          </ul>
-          <div class="manual-tip">💡 Completing a task gives you +10 XP. Every Pomodoro session also adds XP!</div>
-        </div>
-        <div class="divhr"></div>
-        <div class="manual-section">
-          <h3>⏱ Study Timer (Pomodoro)</h3>
-          <ul>
-            <li>Choose Focus, Short Break, or Long Break durations (customizable).</li>
-            <li>Every completed Focus session adds to your <strong>Total Study Hours</strong> and daily/weekly stats.</li>
-            <li>Select a task from the dropdown to associate your session.</li>
-            <li>History shows all your sessions for the day.</li>
-          </ul>
-        </div>
-        <div class="divhr"></div>
-        <div class="manual-section">
-          <h3>📅 Schedule Builder</h3>
-          <ul>
-            <li>Click <strong>Auto-Schedule</strong> to generate a smart timetable based on your subjects and study preferences.</li>
-            <li>Manually add blocks via the <strong>+ Add Block</strong> button (choose subject, day, time).</li>
-            <li>Click the ✕ on any block to remove it.</li>
-            <li>If you have transport enabled, bus blocks appear automatically in the schedule.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div>
-      <div class="card" style="margin-bottom:16px;">
-        <div class="manual-section">
-          <h3>📊 Insights (Live Data)</h3>
-          <ul>
-            <li>All charts update as you complete tasks and Pomodoro sessions.</li>
-            <li><strong>Weekly Study Hours</strong> bar chart shows actual focus minutes.</li>
-            <li><strong>Weak Spots</strong> are subjects with the most pending tasks.</li>
-            <li><strong>Subject Performance</strong> table shows completion rates per subject.</li>
-          </ul>
-        </div>
-        <div class="divhr"></div>
-        <div class="manual-section">
-          <h3>🤖 AI Study Planner</h3>
-          <ul>
-            <li>Uses your live data: exams, tasks, study hours, subjects, commute, streak, etc.</li>
-            <li>Ask for a daily plan, exam strategy, time management, memory tips, or motivation.</li>
-            <li>Use the <strong>Quick Prompts</strong> buttons for common requests.</li>
-            <li>The AI knows if you're a JEE/NEET aspirant or in a specific class.</li>
-          </ul>
-        </div>
-        <div class="divhr"></div>
-        <div class="manual-section">
-          <h3>🏆 XP &amp; Leaderboard</h3>
-          <ul>
-            <li><strong>XP Points:</strong> Task completed = 10 XP, Pomodoro session = 15 XP, Daily streak = 20 XP/day, Note saved = 5 XP, Exam added = 10 XP, 100% syllabus = 100 XP.</li>
-            <li><strong>Streak:</strong> Increases when you complete at least one Pomodoro session per day.</li>
-            <li><strong>Badges</strong> are earned automatically (e.g., Week Hero, Month Master, Task Pro).</li>
-            <li>Leaderboard ranks you against other users (only visible for signed-in users; demo users see themselves only).</li>
-          </ul>
-        </div>
-        <div class="divhr"></div>
-        <div class="manual-section">
-          <h3>🎯 Goals &amp; Habits</h3>
-          <ul>
-            <li>Set a daily study goal (hours). The progress bar shows your achievement.</li>
-            <li>Weekly habit tracker – click on any day to mark a habit as done. Missed days appear dimmed.</li>
-            <li>Add custom habits (e.g., “Read 10 pages”, “Exercise”).</li>
-            <li>Subject time allocation pie chart shows task distribution.</li>
-          </ul>
-        </div>
-        <div class="divhr"></div>
-        <div class="manual-section">
-          <h3>☁️ Cloud &amp; Privacy</h3>
-          <ul>
-            <li>When signed in, data is stored in <strong>Firebase Firestore</strong> and also locally.</li>
-            <li>Guest/demo mode uses only <strong>localStorage</strong> – data never leaves your browser.</li>
-            <li>You can sign out and sign in on any device – your data follows you.</li>
-            <li>To completely wipe your cloud data, use “Reset All Data” while signed in.</li>
-          </ul>
-          <div class="manual-tip">💡 StudyFlow does not sell or share your data. All cloud data is encrypted and accessible only by you.</div>
+        <div class="ph"><div class="ph-left"><h1>Help &amp; User Manual</h1><p>Everything you need to know about StudyFlow</p></div></div>
+        <div class="g2">
+          <div>
+            <div class="card" style="margin-bottom:16px;">
+              <div class="manual-section">
+                <h3>🚀 Getting Started</h3>
+                <ul>
+                  <li>Fill your Personal Details once — saved in your browser forever.</li>
+                  <li>When you return, StudyFlow loads automatically — no login needed.</li>
+                  <li>Click <b>Reset &amp; Start Over</b> in the sidebar to clear all data.</li>
+                </ul>
+                <div class="manual-tip">💡 New users start with zero data — all stats, streaks, XP and hours are earned by you.</div>
+              </div>
+              <div class="divhr"></div>
+              <div class="manual-section">
+                <h3>✅ Tasks &amp; Syllabus</h3>
+                <ul>
+                  <li>Add tasks with a <b>Subject</b> tag — links them to your exams.</li>
+                  <li>When you add an Exam, enter its <b>Syllabus topics</b>.</li>
+                  <li>As you complete tasks for that subject, the <b>Syllabus %</b> rises automatically.</li>
+                </ul>
+                <div class="manual-tip">💡 More tasks completed per subject = higher syllabus completion.</div>
+              </div>
+              <div class="divhr"></div>
+              <div class="manual-section">
+                <h3>⏱ Study Timer</h3>
+                <ul>
+                  <li>Pomodoro Timer — 25 min focus, 5 min break.</li>
+                  <li>Every completed session adds to your <b>Total Study Hours</b>.</li>
+                  <li>Hours appear in Insights and Dashboard chart.</li>
+                </ul>
+              </div>
+              <div class="divhr"></div>
+              <div class="manual-section">
+                <h3>📅 Schedule Builder</h3>
+                <ul>
+                  <li>Click <b>Auto-Schedule</b> to generate a smart timetable.</li>
+                  <li>Click <b>✕</b> on any block to remove it.</li>
+                  <li>Transport users get bus blocks added automatically.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="card" style="margin-bottom:16px;">
+              <div class="manual-section">
+                <h3>📊 Insights (Live Data)</h3>
+                <ul>
+                  <li>All charts update as you complete tasks and Pomodoro sessions.</li>
+                  <li>Weekly chart = actual hours from your timer sessions.</li>
+                  <li>Weak spots = subjects with most pending tasks.</li>
+                </ul>
+              </div>
+              <div class="divhr"></div>
+              <div class="manual-section">
+                <h3>🤖 AI Study Planner</h3>
+                <ul>
+                  <li>Uses your live data: exams, tasks, hours, subjects, commute.</li>
+                  <li>Ask for a study plan, exam strategy, or daily schedule.</li>
+                  <li>Use Quick Prompts for common requests.</li>
+                </ul>
+              </div>
+              <div class="divhr"></div>
+              <div class="manual-section">
+                <h3>🏆 XP &amp; Leaderboard</h3>
+                <ul>
+                  <li>XP is calculated from real activity: tasks, sessions, streaks.</li>
+                  <li>Streak increases when you log at least 1 Pomodoro per day.</li>
+                  <li>Badges are earned automatically at milestones.</li>
+                </ul>
+              </div>
+              <div class="divhr"></div>
+              <div class="manual-section">
+                <h3>💾 Data &amp; Privacy</h3>
+                <ul>
+                  <li>All data stored in your browser's <b>localStorage</b>.</li>
+                  <li>Nothing is sent to any server — 100% private.</li>
+                  <li>Use <b>Reset &amp; Start Over</b> to clear all data intentionally.</li>
+                </ul>
+                <div class="manual-tip">💡 To transfer data, use Chrome Sync or Firefox Sync.</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</div><!-- /pages-wrap -->
+
+      </div><!-- /pages-wrap -->
 
       <!-- DAILY HISTORY PAGE -->
       <div class="page" id="pg-history">
@@ -1202,6 +1201,8 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
   <div class="help-tooltip" id="help-tooltip">
     <div class="help-tooltip-title">📖 Quick Help</div>
     <a onclick="goto('manual');toggleHelp()">📖 User Manual</a>
+    <a onclick="goto('dashboard');toggleHelp()">🏠 Dashboard</a>
+    <a onclick="goto('ai');toggleHelp()">🤖 Ask AI Planner</a>
     <a onclick="goto('profile');toggleHelp()">👤 My Profile</a>
     <a onclick="confirmReset();toggleHelp()">🔄 Reset Data</a>
     <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);">Data saved locally in your browser</div>
@@ -1343,7 +1344,7 @@ const TIMES=['6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00'
 // STATE
 // ════════════════════════════════════════
 function freshState(){return{user:null,tasks:[],exams:[],habits:[],notes:[],resources:[],schedule:[],groups:[],streak:0,lastStudyDate:null,lastTaskResetDate:null,xp:0,totalStudyMins:0,weekMins:[0,0,0,0,0,0,0],pomSessions:[],pomTodayMins:0,pomSession:1,aiMsgs:[],nid:1,leaderboard:[],dailyHistory:[]};}
-let S=freshState();  // ✅ Only ONE declaration
+let S=freshState();
 
 // ════════════════════════════════════════
 // STORAGE — localStorage + Firestore
@@ -1356,6 +1357,7 @@ async function saveCloud(){
   isSavingToCloud=true;
   try{
     const data={...S};
+    // Don't store music blob URLs in Firestore
     delete data.user?.musicPlaylist;
     await db.collection('users').doc(currentUID).set(data);
   }catch(e){console.warn('Cloud save failed:',e);}
@@ -1366,14 +1368,14 @@ async function loadCloud(){
   if(!currentUID)return false;
   try{
     const doc=await db.collection('users').doc(currentUID).get();
-    if(doc.exists){S={...freshState(),...doc.data()};saveLS();return true;}
+    if(doc.exists){S={...freshState(),...doc.data()};save();return true;}
   }catch(e){console.warn('Cloud load failed:',e);}
   return false;
 }
 
-// ✅ FIXED: Save to both local and cloud (no recursion)
+// Save to both local and cloud
 function save(){
-  saveLS();  // ✅ Changed from save() to saveLS()
+  saveLS();
   if(currentUID) saveCloud();
 }
 
@@ -1409,55 +1411,25 @@ async function signInGoogle(){
   }catch(e){hideAuthLoading();showAuthErr(e.message||'Google sign-in failed');}
 }
 async function signInEmail(){
-  const email = document.getElementById('si-email').value.trim();
-  const pass = document.getElementById('si-pass').value;
-  if(!email || !pass){ showAuthErr('Enter email and password'); return; }
+  const email=document.getElementById('si-email').value.trim();
+  const pass=document.getElementById('si-pass').value;
+  if(!email||!pass){showAuthErr('Enter email and password');return;}
   showAuthLoading();
-  try{
-    await auth.signInWithEmailAndPassword(email, pass);
-  } catch(e){
-    hideAuthLoading();
-    let userMsg = '';
-    switch(e.code){
-      case 'auth/operation-not-allowed': 
-        userMsg = 'Email/Password sign-in is disabled. Please enable it in Firebase Console → Authentication → Sign-in methods.'; 
-        break;
-      case 'auth/user-not-found': userMsg = 'No account found. Sign up first.'; break;
-      case 'auth/wrong-password': userMsg = 'Incorrect password.'; break;
-      default: userMsg = e.message;
-    }
-    showAuthErr(userMsg);
-    console.error('Sign-in error:', e);
-  }
+  try{await auth.signInWithEmailAndPassword(email,pass);}
+  catch(e){hideAuthLoading();showAuthErr(friendlyAuthErr(e.code));}
 }
 async function signUpEmail(){
-  const name = document.getElementById('su-name').value.trim();
-  const email = document.getElementById('su-email').value.trim();
-  const pass = document.getElementById('su-pass').value;
-  if(!name){ showAuthErr('Enter your name'); return; }
-  if(!email || !email.includes('@')){ showAuthErr('Enter a valid email'); return; }
-  if(!pass || pass.length < 6){ showAuthErr('Password must be at least 6 characters'); return; }
+  const name=document.getElementById('su-name').value.trim();
+  const email=document.getElementById('su-email').value.trim();
+  const pass=document.getElementById('su-pass').value;
+  if(!name){showAuthErr('Enter your name');return;}
+  if(!email||!email.includes('@')){showAuthErr('Enter a valid email');return;}
+  if(!pass||pass.length<6){showAuthErr('Password must be at least 6 characters');return;}
   showAuthLoading();
   try{
-    const cred = await auth.createUserWithEmailAndPassword(email, pass);
-    await cred.user.updateProfile({ displayName: name });
-    // 🧹 Clear any leftover demo/local data
-    localStorage.removeItem(LS_KEY);
-    S = freshState();
-    // The observer will now see a new Firebase user with no Firestore doc → onboarding
-  } catch(e){
-    hideAuthLoading();
-    let userMsg = '';
-    switch(e.code){
-      case 'auth/email-already-in-use': userMsg = 'An account already exists with this email. Sign in instead.'; break;
-      case 'auth/invalid-email': userMsg = 'Invalid email address.'; break;
-      case 'auth/weak-password': userMsg = 'Password is too weak (min 6 chars).'; break;
-      case 'auth/operation-not-allowed': userMsg = 'Email/Password sign-up is disabled. Enable it in Firebase Console.'; break;
-      default: userMsg = e.message;
-    }
-    showAuthErr(userMsg);
-    console.error('Sign-up error:', e);
-  }
+    const cred=await auth.createUserWithEmailAndPassword(email,pass);
+    await cred.user.updateProfile({displayName:name});
+  }catch(e){hideAuthLoading();showAuthErr(friendlyAuthErr(e.code));}
 }
 async function forgotPassword(){
   const email=document.getElementById('si-email').value.trim();
@@ -1728,12 +1700,52 @@ function delExam(id){if(!confirm('Remove this exam?'))return;S.exams=S.exams.fil
 // ══════ GOALS & HABITS ══════
 function renderGoals(){
   const g=S.user.goal||4,todayMins=S.pomTodayMins||0,weekMins=S.weekMins||[0,0,0,0,0,0,0],weekTotal=weekMins.reduce((a,b)=>a+b,0),monthTotal=S.totalStudyMins||0;
-  document.getElementById('goals-bars').innerHTML=`<div style="margin-bottom:14px;"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span style="font-weight:600;">Today</span><span style="color:var(--text3);">${(todayMins/60).toFixed(1)} / ${g} hrs</span></div><div class="pb"><div class="pbf" style="width:${Math.min(100,Math.round((todayMins/60)/g*100))}%;background:var(--accent);"></div></div></div><div style="margin-bottom:14px;"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span style="font-weight:600;">This Week</span><span style="color:var(--text3);">${(weekTotal/60).toFixed(1)} / ${g*7} hrs</span></div><div class="pb"><div class="pbf" style="width:${Math.min(100,Math.round((weekTotal/60)/(g*7)*100))}%;background:var(--teal);"></div></div></div><div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span style="font-weight:600;">All Time</span><span style="color:var(--text3);">${(monthTotal/60).toFixed(1)} hrs</span></div><div class="pb"><div class="pbf" style="width:${Math.min(100,Math.round((monthTotal/60)/(g*30)*100))}%;background:var(--green);"></div></div></div>`;
+  document.getElementById('goals-bars').innerHTML=`
+    <div style="margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span style="font-weight:600;">Today</span><span style="color:var(--text3);">${(todayMins/60).toFixed(1)} / ${g} hrs</span></div>
+      <div class="pb"><div class="pbf" style="width:${Math.min(100,Math.round((todayMins/60)/g*100))}%;background:var(--accent);"></div></div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span style="font-weight:600;">This Week</span><span style="color:var(--text3);">${(weekTotal/60).toFixed(1)} / ${g*7} hrs</span></div>
+      <div class="pb"><div class="pbf" style="width:${Math.min(100,Math.round((weekTotal/60)/(g*7)*100))}%;background:var(--teal);"></div></div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span style="font-weight:600;">All Time</span><span style="color:var(--text3);">${(monthTotal/60).toFixed(1)} hrs</span></div>
+      <div class="pb"><div class="pbf" style="width:${Math.min(100,Math.round((monthTotal/60)/(g*30)*100))}%;background:var(--green);"></div></div>
+    </div>`;
+
   const sub={};S.tasks.forEach(t=>{if(!sub[t.subj])sub[t.subj]=0;sub[t.subj]++;});
   const tot=Object.values(sub).reduce((a,b)=>a+b,0)||1,cols=['var(--accent)','var(--red)','var(--green)','var(--teal)','var(--amber)','var(--purple)'];
   document.getElementById('subj-alloc').innerHTML=Object.entries(sub).length?Object.entries(sub).map(([s,c],i)=>`<div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span style="color:var(--text2);">${s}</span><span style="color:var(--text3);">${c} tasks · ${Math.round(c/tot*100)}%</span></div><div class="pb"><div class="pbf" style="width:${Math.round(c/tot*100)}%;background:${cols[i%cols.length]};"></div></div></div>`).join(''):'<div style="color:var(--text3);font-size:13px;">Add tasks to see allocation</div>';
-  const dLabels=['M','T','W','T','F','S','S'],todayDow=new Date().getDay()===0?6:new Date().getDay()-1;
-  document.getElementById('habit-list').innerHTML=`<div style="display:flex;gap:4px;justify-content:flex-end;margin-bottom:8px;">${dLabels.map(d=>`<div style="font-size:10px;color:var(--text3);width:24px;text-align:center;">${d}</div>`).join('')}</div>`+(S.habits.length?S.habits.map(h=>`<div class="habit-row"><div style="flex:1;font-size:13px;font-weight:600;">${h.name}</div><div style="display:flex;gap:4px;">${(h.done||[0,0,0,0,0,0,0]).map((d,i)=>`<div class="hdot ${d?'done':i<todayDow?'miss':''}" onclick="togHabit(${h.id},${i})">${d?'✓':''}</div>`).join('')}</div><button class="ibtn" onclick="delHabit(${h.id})" style="margin-left:6px;">🗑</button></div>`).join(''):'<div style="color:var(--text3);font-size:13px;padding:12px 0;">No habits yet.</div>');
+
+  // Habit tracker — fix alignment: labels sit directly above dots in same flex row
+  const DAY_LABELS=['M','T','W','T','F','S','S'];
+  // todayDow: Mon=0 ... Sun=6
+  const rawDow=new Date().getDay(); // 0=Sun
+  const todayDow=rawDow===0?6:rawDow-1;
+
+  const habitHeader=`<div class="habit-row" style="border-bottom:1px solid var(--border);padding-bottom:6px;margin-bottom:2px;">
+    <div style="flex:1;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;">Habit</div>
+    <div style="display:flex;gap:4px;">${DAY_LABELS.map((d,i)=>`<div style="width:26px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:${i===todayDow?'var(--accent)':'var(--text3)'};">${d}</div>`).join('')}</div>
+    <div style="width:28px;"></div>
+  </div>`;
+
+  const habitRows=S.habits.length?S.habits.map(h=>{
+    const dots=(h.done||[0,0,0,0,0,0,0]).map((d,i)=>{
+      let cls='hdot';
+      if(d) cls+=' done';
+      else if(i<todayDow) cls+=' miss';
+      else if(i===todayDow) cls+=' today-dot';
+      return `<div class="${cls}" style="width:26px;height:26px;" onclick="togHabit(${h.id},${i})" title="${DAY_LABELS[i]}">${d?'✓':''}</div>`;
+    }).join('');
+    return `<div class="habit-row">
+      <div style="flex:1;font-size:13px;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${h.name}</div>
+      <div style="display:flex;gap:4px;flex-shrink:0;">${dots}</div>
+      <button class="ibtn" onclick="delHabit(${h.id})" style="margin-left:6px;flex-shrink:0;">🗑</button>
+    </div>`;
+  }).join(''):'<div style="color:var(--text3);font-size:13px;padding:12px 0;">No habits yet.</div>';
+
+  document.getElementById('habit-list').innerHTML=habitHeader+habitRows;
 }
 function togHabit(id,day){const h=S.habits.find(h=>h.id===id);if(h){h.done[day]=h.done[day]?0:1;save();renderGoals();}}
 function addHabit(){const n=document.getElementById('mh-name').value.trim();if(!n){toast('Enter habit name','err');return;}S.habits.push({id:S.nid++,name:n,done:[0,0,0,0,0,0,0]});document.getElementById('mh-name').value='';closeM('m-habit');save();renderGoals();toast('Habit added!');}
@@ -1769,11 +1781,28 @@ function pomNext(){
 function pomReset(){clearInterval(pomInt);pomRunning=false;pomElapsed=0;pomMode='focus';document.getElementById('pomo-playbtn').textContent='▶';pomUpdateUI();}
 function pomSkip(){pomNext();}
 function renderPomoHistory(){
-  const sessions=S.pomSessions||[],el=document.getElementById('pomo-history');
-  if(!sessions.length){el.innerHTML='<div style="font-size:13px;color:var(--text3);padding:8px 0;">No sessions yet. Start your first!</div>';return;}
-  el.innerHTML=sessions.slice(-5).reverse().map(s=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);"><div style="width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;"></div><div style="flex:1;font-size:13px;color:var(--text2);">${s.type} · ${s.mins} min</div><div style="font-size:12px;color:var(--text3);">${s.time}</div></div>`).join('');
+  // pomSessions is cleared each day by checkDailyReset
+  const sessions=S.pomSessions||[];
+  const el=document.getElementById('pomo-history');
+  if(!sessions.length){
+    el.innerHTML='<div style="font-size:13px;color:var(--text3);padding:8px 0;">No sessions yet today. Start your first!</div>';
+    return;
+  }
+  el.innerHTML=sessions.slice(-6).reverse().map(s=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;"></div>
+      <div style="flex:1;font-size:13px;color:var(--text2);">${s.type} · ${s.mins} min</div>
+      <div style="font-size:12px;color:var(--text3);">${s.time}</div>
+    </div>`).join('');
 }
-function refreshPomoTasks(){document.getElementById('pomo-task').innerHTML='<option>Select a task...</option>'+S.tasks.filter(t=>!t.done).map(t=>`<option>${t.name}</option>`).join('');renderPomoHistory();pomUpdateUI();document.getElementById('pomo-total').textContent=Math.round(S.pomTodayMins||0)+' min';document.getElementById('total-hrs-display').textContent=minsToH(S.totalStudyMins||0);}
+function refreshPomoTasks(){
+  document.getElementById('pomo-task').innerHTML='<option>Select a task...</option>'+S.tasks.filter(t=>!t.done).map(t=>`<option>${t.name}</option>`).join('');
+  renderPomoHistory();
+  pomUpdateUI();
+  // pomTodayMins is reset daily by checkDailyReset — always shows today's fresh count
+  document.getElementById('pomo-total').textContent=Math.round(S.pomTodayMins||0)+' min';
+  document.getElementById('total-hrs-display').textContent=minsToH(S.totalStudyMins||0);
+}
 
 // ══════ INSIGHTS ══════
 function renderInsights(){
@@ -1962,127 +1991,193 @@ function closeSidebar(){
 
 // ══════ DAILY RESET + HISTORY ARCHIVE ══════
 function checkDailyReset(){
-  const td=today();
-  if(S.lastTaskResetDate===td)return;
-  // Archive yesterday's completed tasks
-  const doneTasks=S.tasks.filter(t=>t.done);
-  if(doneTasks.length>0&&S.lastTaskResetDate){
-    if(!S.dailyHistory)S.dailyHistory=[];
-    const existing=S.dailyHistory.find(h=>h.date===S.lastTaskResetDate);
-    if(!existing){
-      S.dailyHistory.unshift({
-        date:S.lastTaskResetDate,
-        tasks:doneTasks.map(t=>({name:t.name,subj:t.subj,pri:t.pri})),
-        studyMins:S.pomTodayMins||0,
-        streak:S.streak||0
-      });
-      if(S.dailyHistory.length>60)S.dailyHistory=S.dailyHistory.slice(0,60);
+  const td = today();
+  if(S.lastTaskResetDate === td) return; // already reset today
+
+  // 1. Archive yesterday's data (if any)
+  if(S.lastTaskResetDate){
+    const doneTasks = S.tasks.filter(t => t.done);
+    const overdueTasks = S.tasks.filter(t => !t.done && t.due && t.due < S.lastTaskResetDate);
+    if(doneTasks.length > 0 || overdueTasks.length > 0 || (S.pomTodayMins > 0)){
+      if(!S.dailyHistory) S.dailyHistory = [];
+      const existing = S.dailyHistory.find(h => h.date === S.lastTaskResetDate);
+      if(!existing){
+        S.dailyHistory.unshift({
+          date: S.lastTaskResetDate,
+          done: doneTasks.map(t => ({ name: t.name, subj: t.subj, pri: t.pri })),
+          overdue: overdueTasks.map(t => ({ name: t.name, subj: t.subj, pri: t.pri, due: t.due })),
+          studyMins: S.pomTodayMins || 0,
+          streak: S.streak || 0,
+          totalTasks: S.tasks.length
+        });
+        // keep only last 60 days
+        if(S.dailyHistory.length > 60) S.dailyHistory = S.dailyHistory.slice(0,60);
+      }
     }
   }
-  // Reset tasks to pending for new day
-  S.tasks=S.tasks.map(t=>({...t,done:false}));
-  // Reset today's study mins
-  S.pomTodayMins=0;
-  // Reset weekly stats if Monday
-  if(new Date().getDay()===1)S.weekMins=[0,0,0,0,0,0,0];
-  S.lastTaskResetDate=td;
+
+  // 2. Reset tasks: completed → pending, overdue stay as they are
+  S.tasks = S.tasks.map(t => t.done ? { ...t, done: false } : t);
+
+  // 3. Reset daily Pomodoro counters
+  S.pomTodayMins = 0;
+  S.pomSessions = [];
+
+  // 4. Reset weekly study minutes on Monday
+  const dow = new Date().getDay(); // 0=Sun, 1=Mon
+  if(dow === 1) S.weekMins = [0,0,0,0,0,0,0];
+
+  // 5. Reset habits every Monday
+  if(dow === 1){
+    S.habits = (S.habits || []).map(h => ({ ...h, done: [0,0,0,0,0,0,0] }));
+  }
+
+  S.lastTaskResetDate = td;
   save();
+
+  // 6. Refresh UI to reflect new day
+  if(document.getElementById('app').style.display === 'flex'){
+    // only refresh if app is visible
+    renderTasks();
+    renderDashboard();
+    refreshPomoTasks();
+    renderGoals();
+    renderInsights();
+    renderHistory();
+  }
 }
+
+// Check for date change every minute
+let lastCheckedDate = today();
+setInterval(() => {
+  const now = today();
+  if(now !== lastCheckedDate){
+    lastCheckedDate = now;
+    checkDailyReset();
+    // Also update any UI elements that show date
+    const dateEl = document.getElementById('dash-date');
+    if(dateEl) dateEl.textContent = new Date().toLocaleDateString('en-IN', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  }
+}, 60000);
+
+// Also reset when tab becomes visible again
+document.addEventListener('visibilitychange', () => {
+  if(!document.hidden){
+    const now = today();
+    if(now !== lastCheckedDate){
+      lastCheckedDate = now;
+      checkDailyReset();
+    }
+  }
+});
+
 
 // ══════ HISTORY PAGE ══════
 function renderHistory(){
   const el=document.getElementById('history-list');
   if(!S.dailyHistory||!S.dailyHistory.length){
-    el.innerHTML='<div class="empty-state"><div class="ei">📆</div><p>No history yet — complete tasks each day to build your record!</p></div>';
+    el.innerHTML='<div class="empty-state"><div class="ei">📆</div><p>No history yet — complete tasks and come back tomorrow to see your archive!</p></div>';
     return;
   }
-  el.innerHTML=S.dailyHistory.map(h=>`
-    <div class="hist-day">
-      <div class="hist-day-header" onclick="this.nextElementSibling.classList.toggle('open')">
-        <div class="hist-day-date">📅 ${fmt(h.date)}</div>
+  el.innerHTML=S.dailyHistory.map((h,idx)=>{
+    // Support both old format (h.tasks) and new format (h.done / h.overdue)
+    const done=h.done||h.tasks||[];
+    const overdue=h.overdue||[];
+    const totalDone=done.length,totalOverdue=overdue.length;
+    const pct=h.totalTasks>0?Math.round(totalDone/h.totalTasks*100):totalDone>0?100:0;
+    return`<div class="hist-day">
+      <div class="hist-day-header" onclick="document.getElementById('hb-${idx}').classList.toggle('open')">
+        <div>
+          <div class="hist-day-date">📅 ${fmt(h.date)}</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px;">${pct}% completion · ${Math.round(h.studyMins||0)} min studied</div>
+        </div>
         <div class="hist-day-stats">
-          <span>✅ ${h.tasks.length} tasks</span>
-          <span>⏱ ${Math.round(h.studyMins||0)} min</span>
+          <span style="color:var(--green);">✅ ${totalDone}</span>
+          ${totalOverdue>0?`<span style="color:var(--red);">⚠️ ${totalOverdue}</span>`:''}
           <span>🔥 ${h.streak||0}d</span>
-          <span style="color:var(--text3);font-size:11px;margin-left:4px;">▾</span>
+          <span style="color:var(--text3);font-size:12px;">▾</span>
         </div>
       </div>
-      <div class="hist-day-body">
-        ${h.tasks.map(t=>`<div class="hist-task-row"><span class="tag ${SC[t.subj]||'tblue'}" style="flex-shrink:0;">${t.subj}</span><span style="flex:1;padding:0 8px;">${t.name}</span><span class="tag ${t.pri==='high'?'tred':t.pri==='med'?'tamber':'tgreen'}">${t.pri}</span></div>`).join('')||'<div style="color:var(--text3);font-size:12px;">No tasks recorded</div>'}
+      <div class="hist-day-body" id="hb-${idx}">
+        ${done.length>0?`
+          <div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">✅ Completed (${done.length})</div>
+          ${done.map(t=>`<div class="hist-task-row">
+            <span class="tag ${SC[t.subj]||'tblue'}" style="flex-shrink:0;">${t.subj}</span>
+            <span style="flex:1;padding:0 8px;">${t.name}</span>
+            <span class="tag ${t.pri==='high'?'tred':t.pri==='med'?'tamber':'tgreen'}">${t.pri}</span>
+          </div>`).join('')}`:''}
+        ${overdue.length>0?`
+          <div style="font-size:11px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.06em;margin:${done.length>0?'10px':0} 0 6px;">⚠️ Not Finished / Overdue (${overdue.length})</div>
+          ${overdue.map(t=>`<div class="hist-task-row" style="opacity:.75;">
+            <span class="tag ${SC[t.subj]||'tblue'}" style="flex-shrink:0;">${t.subj}</span>
+            <span style="flex:1;padding:0 8px;">${t.name}</span>
+            <span class="tag tred">overdue</span>
+          </div>`).join('')}`:''}
+        ${done.length===0&&overdue.length===0?'<div style="color:var(--text3);font-size:12px;padding:6px 0;">No task data recorded for this day</div>':''}
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;gap:16px;font-size:12px;color:var(--text3);">
+          <span>⏱ ${Math.round(h.studyMins||0)} min studied</span>
+          <span>🔥 ${h.streak||0} day streak</span>
+        </div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 // ══════ BOOT — Firebase Auth Observer ══════
-window.addEventListener('DOMContentLoaded',()=> {
+window.addEventListener('DOMContentLoaded',()=>{
   buildSubjCheck('class10');
 
   // Show auth screen with form visible (not spinner) while Firebase checks
   document.getElementById('auth-screen').style.display='block';
   document.getElementById('onboard').style.display='none';
   document.getElementById('app').style.display='none';
-  document.getElementById('float-help').style.display='none' });
+  document.getElementById('float-help').style.display='none';
   // auth-box is visible, auth-loading is hidden by default
 
-  auth.onAuthStateChanged(async (fbUser) => {
-  console.log("Auth state changed. Firebase user:", fbUser ? fbUser.email : "null");
-  
-  if (fbUser) {
-    currentUID = fbUser.uid;
-    showAuthLoading();
-    try {
-      // Check if user document exists in Firestore
-      const doc = await db.collection('users').doc(currentUID).get();
-      if (doc.exists) {
-        // Existing user → load cloud data and launch app
-        S = { ...freshState(), ...doc.data() };
+  auth.onAuthStateChanged(async(fbUser)=>{
+    if(fbUser){
+      // User is signed in — show spinner while loading data
+      currentUID=fbUser.uid;
+      showAuthLoading();
+      try{
+        const cloudOk=await loadCloud();
+        if(!cloudOk)loadLS();
+      }catch(e){loadLS();}
+
+      if(!S.user||!S.user.name){
+        // Brand new account — pre-fill name from Firebase and show onboarding
+        S.user={
+          name:fbUser.displayName||fbUser.email.split('@')[0]||'Student',
+          mode:'class10',displayMode:'Class 10',goal:4,
+          hasTransport:false,cm:0,ce:0,
+          schoolStart:'08:00',schoolEnd:'14:30',
+          subjects:['Mathematics','Science','English','Hindi','Social Studies'],
+          studyTime:'Evening (5–9 PM)'
+        };
+        S.habits=[
+          {id:S.nid++,name:'Daily Revision',done:[0,0,0,0,0,0,0]},
+          {id:S.nid++,name:'Practice Problems',done:[0,0,0,0,0,0,0]},
+          {id:S.nid++,name:'Read Textbook',done:[0,0,0,0,0,0,0]}
+        ];
+        S.lastTaskResetDate=today();
+        save();
+        hideAuthLoading();
+        // Pre-fill name in onboarding
+        document.getElementById('auth-screen').style.display='none';
+        document.getElementById('ob-name').value=S.user.name;
+        document.getElementById('onboard').style.display='flex';
+      } else {
+        // Returning user — run daily reset then launch
         checkDailyReset();
         hideAuthLoading();
         launchApp();
-      } else {
-        // New user → no cloud data, show onboarding
-        S = freshState();
-        S.user = {
-          name: fbUser.displayName || fbUser.email.split('@')[0] || 'Student',
-          mode: 'class10', displayMode: 'Class 10', goal: 4,
-          hasTransport: false, cm: 0, ce: 0,
-          schoolStart: '08:00', schoolEnd: '14:30',
-          subjects: ['Mathematics', 'Science', 'English', 'Hindi', 'Social Studies'],
-          studyTime: 'Evening (5–9 PM)'
-        };
-        S.habits = [
-          { id: S.nid++, name: 'Daily Revision', done: [0,0,0,0,0,0,0] },
-          { id: S.nid++, name: 'Practice Problems', done: [0,0,0,0,0,0,0] },
-          { id: S.nid++, name: 'Read Textbook', done: [0,0,0,0,0,0,0] }
-        ];
-        S.lastTaskResetDate = today();
-        save(); // saves to both localStorage and Firestore (since currentUID is set)
-        hideAuthLoading();
-        
-        // Show onboarding screen
-        document.getElementById('auth-screen').style.display = 'none';
-        document.getElementById('onboard').style.display = 'flex';
-        document.getElementById('app').style.display = 'none';
-        document.getElementById('float-help').style.display = 'none';
-        const obName = document.getElementById('ob-name');
-        if (obName) obName.value = S.user.name;
       }
-    } catch(e) {
-      console.error("Error loading user data:", e);
-      hideAuthLoading();
-      showAuthErr("Error loading account. Please try again.");
+    } else {
+      // Not signed in — show auth form
+      currentUID=null;
+      hideAuthLoading(); // make sure form is visible
     }
-  } else {
-    // No Firebase user → show auth screen
-    currentUID = null;
-    S = freshState();
-    document.getElementById('auth-loading').style.display = 'none';
-    document.getElementById('auth-screen').style.display = 'block';
-    document.getElementById('onboard').style.display = 'none';
-    document.getElementById('app').style.display = 'none';
-    document.getElementById('float-help').style.display = 'none';
-    document.getElementById('auth-box').style.display = 'block';
-  }
+  });
 });
 </script>
 </body>
